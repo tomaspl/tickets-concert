@@ -1,0 +1,60 @@
+<div class="bg-[#fafafa] h-full">
+    <header class="absolute inset-x-0 top-0 z-50">
+        <nav class="flex items-center justify-center p-6 lg:px-8" aria-label="Global">
+            <div class="flex justify-center lg:flex-1">
+                <a href="#" class="-m-1.5 p-1.5">
+                    <span class="sr-only">Las Cumbres</span>
+                    <img class="h-24 w-auto" src="https://www.lascumbres.edu.ar/images/logo.png" alt="">
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="relative isolate px-6 pt-14 lg:px-8 h-full">
+        <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+            aria-hidden="true">
+        </div>
+        <div class="mx-auto max-w-6xl pt-24">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Concert</h1>
+                <ng-container *ngIf="(details$ | async) as details">
+                    <ng-container *ngIf="details.length > 0;else noReservations">
+                        <h2 class="text-2xl mt-2 mb-2 font-bold tracking-tight text-gray-900 sm:text-2xl">
+                            Familia {{lastName$ | async}}</h2>
+                        <div class="flex flex-col place-content-center">
+                            <div *ngIf="(details$ | async) as details">
+                                <div *ngIf="details.length > 0;else noReservations">
+                                    <ul class="bg-transparent">
+
+                                        @for(reservation of (details$ | async);track reservation) {
+                                        @if(reservation.row){
+                                        <li class="bg-transparent">{{reservation.sectionName.split('-')[1]}} - Fila:
+                                            {{reservation.row}}
+                                            -
+                                            Asiento:
+                                            {{reservation.seat}}</li>
+                                        } @else {
+                                        <li class="bg-transparent">{{reservation.sectionName.split('-')[1]}} - Palco:
+                                            {{reservation.seat}}</li>
+                                        }
+
+                                        }
+                                    </ul>
+                                    <img src="assets/images/thanks.gif" class="w-full m-auto sm:w-4/12" alt="Gracias">
+                                </div>
+
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <ng-template #noReservations>
+                    No hay aun reservas hechas por esta familia
+                </ng-template>
+            </div>
+        </div>
+        <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+            aria-hidden="true">
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="bg-[#fafafa] h-full">
+    <header class="absolute inset-x-0 top-0 z-50">
+        <nav class="p-6 lg:px-8" aria-label="Global">
+            <div class="flex flex-col items-center justify-center">
+                <a class="-m-1.5 p-1.5">
+                    <span class="sr-only">Las Cumbres</span>
+                    <img class="h-24 w-auto" src="https://www.lascumbres.edu.ar/images/logo.png" alt="">
+                </a>
+                <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Concert</h1>
+                <h2 class="text-2xl mt-2 mb-2 font-bold tracking-tight text-gray-900 sm:text-2xl">
+                    {{lastName ? 'Familia '+ lastName : lastName}}</h2>
+            </div>
+        </nav>
+    </header>
+
+    <div class="relative isolate px-6 pt-14 lg:px-8 h-full">
+        <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+            aria-hidden="true">
+        </div>
+        <div class="mx-auto max-w-6xl mt-14 pt-24">
+            <div class="text-center">
+                @if (isScreenSmall) {
+                <small-resolution-page />
+                }@else {
+                @if (currentPage ==="welcome") {<welcome-page />}
+                @if (currentPage ==="waiting") {<waiting-room-page />}
+                @if (currentPage ==="stage") {<stage-page />}
+                @if (currentPage ==="thanks") {<thanks-page />}
+                @if (currentPage ==="expired-time") {<expired-time-page />}
+                @if (currentPage ==="error") {<error-page />}
+                @if (currentPage ==="loading") {
+                <div class="p-4 max-w-sm w-full mx-auto flex justify-center">
+                    <svg class="animate-spin h-5 w-5 bg-cumbres-red" viewBox="0 0 24 24">
+                        <!-- ... -->
+                    </svg>
+                </div>
+                }
+                }
+            </div>
+        </div>
+        <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+            aria-hidden="true">
+
+        </div>
+    </div>
+</div>

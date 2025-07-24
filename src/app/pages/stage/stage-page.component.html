@@ -1,0 +1,49 @@
+<div class="relative min-h-screen">
+    <!-- Temporizador de cuenta regresiva -->
+    <div class="p-4 max-w-sm w-full mx-auto flex justify-center" *ngIf="countdownActive">
+        <span class="text-white bg-gray-700 p-2 rounded">
+            Tiempo restante para confirmar la reserva: <p class="bg-transparent font-bold">{{ formattedTime }}</p>
+        </span>
+    </div>
+    <!--div class="p-4 max-w-sm w-full mx-auto flex justify-center" [ngClass]="{'hidden':!loading}">
+        <svg class="animate-spin h-5 w-5 bg-cumbres-red" viewBox="0 0 24 24">
+        </svg>
+    </div-->
+    <app-map />
+
+    <div>
+
+
+        <div class="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 flex justify-between items-center z-20">
+            <span class="text-white bg-transparent">
+                <!--Asientos Disponibles: {{availableSeats}}<br>Asientos Reservados: {{reservedSeats}}-->
+            </span>
+            <div class="bg-transparent">
+                <button (click)="toggleDetails()" [ngClass]="{'disabled':reservedSeats===0}"
+                    class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2">
+                    {{ showDetails ? 'Ocultar detalles' : 'Ver detalles' }}
+                </button>
+                <button (click)="reserveSeats()" [ngClass]="{'disabled':reservedSeats===0}"
+                    class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                    Reservar
+                </button>
+            </div>
+        </div>
+
+        <div class="fixed bottom-20 left-0 right-0 bg-gray-700 text-white p-4 fixed-footer-container" [ngClass]="{'fixed bottom-16 left-0 right-0 bg-gray-700 text-white p-4 fixed-footer-container':
+            true,'expandable-content': true, 'show': showDetails}">
+            <ul class="bg-transparent">
+                @for(reservation of (details$ |async);track reservation) {
+                @if(reservation.row){
+                <li class="bg-transparent">{{reservation.sectionName.split('-')[1]}} - Fila: {{reservation.row}} -
+                    Asiento:
+                    {{reservation.seat}}</li>
+                } @else {
+                <li class="bg-transparent">{{reservation.sectionName.split('-')[1]}} - Palco: {{reservation.seat}}</li>
+                }
+
+                }
+            </ul>
+        </div>
+    </div>
+    <app-toaster></app-toaster>
