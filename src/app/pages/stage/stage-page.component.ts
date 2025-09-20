@@ -16,6 +16,7 @@ import { interval, Subscription, Observable } from 'rxjs';
 import { takeWhile, map } from 'rxjs/operators';
 import { ToasterComponent } from '../../shared/components/toaster.component';
 import { MapComponent } from '../../theater/map/map.component';
+import { AppService } from '../../shared/app.service';
 
 @Component({
   selector: 'stage-page',
@@ -42,7 +43,7 @@ export class StagePageComponent implements OnInit {
 
   constructor(
     private familyService: FamilyService,
-    private cdr: ChangeDetectorRef
+    private appService: AppService,
   ) {
     this.familyService.stageMap$.subscribe((response) => {
       if (response) {
@@ -65,7 +66,7 @@ export class StagePageComponent implements OnInit {
 
   ngOnInit() {
     this.startCountdown();
-    this.familyService.available$.subscribe((response) => {
+    this.appService.theatreIsOpen$.subscribe((response) => {
       if (response === false) {
         this.countdownSubscription.unsubscribe();
       }
@@ -108,22 +109,17 @@ export class StagePageComponent implements OnInit {
 
   // Acción que se dispara cuando el temporizador llega a 0
   onCountdownFinished() {
-    // Aquí puedes definir la acción que deseas realizar, por ejemplo:
-    this.familyService.removeFromQueue();
-    console.log('El temporizador ha finalizado. Acción disparada.');
-    this.countdownActive = false; // Reinicia el estado del temporizador
-    this.familyService.changePage('expired-time');
+  // Solo cambiar de página, la expulsión la maneja el backend
+  this.countdownActive = false; // Reinicia el estado del temporizador
+  this.appService.changePage('expired-time');
   }
 
   async reserveSeats() {
-    //if (this.reservedSeats > 0) {
     try {
       await this.familyService.reservateSeats();
       this.familyService.removeFromQueue();
     } catch (e) {
-      console.log('e', e);
     }
-    //}
   }
 
   toggleDetails() {

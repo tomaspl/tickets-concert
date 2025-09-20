@@ -22,7 +22,6 @@ export class ReservationPageComponent implements OnInit {
   ) {
     const id = this.route.snapshot.paramMap.get('id') || '';
     this.familyService.fetchStageMap(id);
-    //console.log('id->', this.route.snapshot.paramMap.get('id') || '');
   }
 
   ngOnInit() {

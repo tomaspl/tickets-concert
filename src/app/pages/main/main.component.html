@@ -19,9 +19,9 @@
         </div>
         <div class="mx-auto max-w-6xl mt-14 pt-24">
             <div class="text-center">
-                @if (isScreenSmall) {
+                <!--@if (isScreenSmall) {
                 <small-resolution-page />
-                }@else {
+                }@else {-->
                 @if (currentPage ==="welcome") {<welcome-page />}
                 @if (currentPage ==="waiting") {<waiting-room-page />}
                 @if (currentPage ==="stage") {<stage-page />}
@@ -30,12 +30,10 @@
                 @if (currentPage ==="error") {<error-page />}
                 @if (currentPage ==="loading") {
                 <div class="p-4 max-w-sm w-full mx-auto flex justify-center">
-                    <svg class="animate-spin h-5 w-5 bg-cumbres-red" viewBox="0 0 24 24">
-                        <!-- ... -->
-                    </svg>
+                    <svg class="animate-spin h-5 w-5 bg-cumbres-red" viewBox="0 0 24 24"></svg>
                 </div>
                 }
-                }
+                <!--}-->
             </div>
         </div>
         <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"

@@ -4,7 +4,7 @@
   },
   "hosting": {
     "public": "dist/tickets-concert/browser",
-"headers": [
+    "headers": [
       {
         "source": "/index.html",
         "headers": [
@@ -32,8 +32,7 @@
           }
         ]
       }
-    ]
-,
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -45,5 +44,18 @@
         "destination": "/index.html"
       }
     ]
-  }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
 }

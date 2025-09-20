@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FamilyService } from '../../shared/family.service';
+import { AppService } from '../../shared/app.service';
 
 @Component({
   selector: 'error-page',
@@ -11,8 +11,8 @@ import { FamilyService } from '../../shared/family.service';
 export class ErrorPageComponent {
   error!: string;
   currentColor = 'red';
-  constructor(private familyService: FamilyService) {}
+  constructor(private appService: AppService) {}
   ngOnInit() {
-    this.error = this.familyService.error;
+    this.error = this.appService.error;
   }
 }

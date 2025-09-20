@@ -9,7 +9,6 @@ export class ToasterService {
   toasters$ = this.toasters.asObservable();
 
   showToaster(message: string) {
-    console.log('toaster', message);
     this.toasters.next(message);
   }
 }

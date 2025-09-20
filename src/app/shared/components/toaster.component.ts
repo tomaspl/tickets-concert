@@ -16,7 +16,6 @@ export class ToasterComponent implements OnInit {
 
   ngOnInit() {
     this.toasterService.toasters$.subscribe((message) => {
-      console.log('message subscription', message);
       if (message === '') return;
       const toaster = { message, visible: true };
       this.toasters.push(toaster);

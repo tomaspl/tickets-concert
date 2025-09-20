@@ -10,6 +10,7 @@ import { ExpiredTimeComponent } from '../expired-time/expired-time-page.componen
 import { SmallResolutionPageComponent } from '../small-resolution/small-resolution-page.component';
 import { ErrorPageComponent } from '../error/error-page.component';
 import { preventaAvailable } from '../../constants';
+import { AppService } from '../../shared/app.service';
 
 @Component({
   selector: 'main-page',
@@ -41,19 +42,19 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private familyService: FamilyService
+    private familyService: FamilyService,
+    private appService: AppService,
   ) {}
 
   ngOnInit() {
     this.checkScreenSize();
-    this.familyService.syncAvailability();
+    this.familyService.listenIfTheatreIsOpen();
     this.familyService.fetchStageMap();
 
-    this.familyService.available$.pipe(take(1)).subscribe((response) => {
-      console.log('response available');
+    this.appService.theatreIsOpen.pipe(take(1)).subscribe((response) => {
       if (response === false) {
-        this.familyService.setError('La boleteria se encuentra cerrada');
-        this.familyService.changePage('error');
+        this.appService.setError('La boleteria se encuentra cerrada');
+        this.appService.changePage('error');
       }
     });
 
@@ -61,7 +62,6 @@ export class MainPageComponent implements OnInit {
     this.familyService.setFamilyId(familyId);
     this.checkFamily();
     this.familyService.getCurrentPage().subscribe((response) => {
-      console.log('currentPage', response);
       this.currentPage = response;
     });
   }
@@ -84,27 +84,28 @@ export class MainPageComponent implements OnInit {
       });
       this.familyService.availableSeats$.pipe(take(1)).subscribe((response) => {
         this.availableSeats = response;
-        /*if (this.availableSeats === 0) {
-          this.familyService.changePage('thanks');
-        } else {*/
         this.familyService.preventa$.pipe(take(1)).subscribe((preventa) => {
-          console.log({ preventa, preventaAvailable });
           if (preventa && preventaAvailable) {
-            this.familyService.changePage('welcome');
+            this.appService.changePage('welcome');
           } else {
-            if (!preventaAvailable) {
-              this.familyService.changePage('welcome');
+            if (!preventaAvailable && this.availableSeats>0) {
+              this.appService.changePage('welcome');
             } else {
-              this.familyService.setError('La boleteria se encuentra cerrada');
-              this.familyService.changePage('error');
+              if(this.availableSeats===0){
+                this.appService.changePage('thanks');
+              }else {
+                this.appService.setError('La boleteria se encuentra cerrada');
+                this.appService.changePage('error');
+              }
+
+
             }
           }
         });
-        //}
       });
     } else {
-      this.familyService.setError('Página Inexistente');
-      this.familyService.changePage('error');
+      this.appService.setError('Página Inexistente');
+      this.appService.changePage('error');
     }
   }
 }

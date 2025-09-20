@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FamilyService } from '../shared/family.service';
+import { AppService } from '../shared/app.service';
 import { Family } from '../model/Family';
 import { sanitizeFamily } from '../utils/map';
 import { environment } from '../../environments/environment';
@@ -21,18 +22,17 @@ export class AdminComponent implements OnInit {
   families: Family[] = [];
   familiesSearch: Family[] = [];
   url: string;
-  isChecked: boolean | null = null;
+  theatreIsOpen: boolean | null = null;
   showMap = false;
-  public available$!: Observable<boolean | null>;
+  //public available$!: Observable<boolean | null>;
   preventa = preventaAvailable;
-  constructor(private familyService: FamilyService) {
+  constructor(private familyService: FamilyService, private appService: AppService) {
     this.url = environment.url;
     this.familyService.fetchStageMap();
   } // Inyección de dependencias en el constructor
 
   async toggleChange() {
-    await this.familyService.changeAvailability();
-    //this.isChecked = !this.isChecked;
+    await this.appService.changeAvailability();
   }
 
   toggleMap() {
@@ -40,12 +40,11 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.familyService.syncAvailability();
+    this.familyService.listenIfTheatreIsOpen();
     this.familyService.fetchFamilies();
-    this.familyService.available$.subscribe((response) => {
-      console.log('response', response);
+    this.appService.theatreIsOpen$.subscribe((response) => {
       if (response !== null) {
-        this.isChecked = !!response;
+        this.theatreIsOpen = !!response;
       }
     });
     this.familyService.families$
@@ -72,7 +71,7 @@ export class AdminComponent implements OnInit {
   }
 
   resetApp() {
-    this.familyService.resetApp();
+    this.appService.resetApp();
   }
 
   downloadReport() {
@@ -80,9 +79,7 @@ export class AdminComponent implements OnInit {
   }
 
   copyUrl(url: string, family: HTMLElement) {
-    //this.animate = true;
     family.classList.add('animate-bg');
-
     // Después de 2 segundos, volver al color original
     setTimeout(() => {
       family.classList.remove('animate-bg');
@@ -90,11 +87,8 @@ export class AdminComponent implements OnInit {
     navigator.clipboard
       .writeText(url)
       .then(() => {
-        console.log('Texto copiado al portapapeles');
-        // Puedes agregar un mensaje para el usuario, como una alerta o un snackbar.
       })
       .catch((err) => {
-        console.error('Error al copiar el texto: ', err);
       });
   }
 

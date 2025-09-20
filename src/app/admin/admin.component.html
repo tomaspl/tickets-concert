@@ -20,9 +20,9 @@
                 <div class="grid lg:grid-cols-5 lg:gap-4">
                     <div></div>
                     <div>
-                        <button disabled
-                            class="bg-cumbres-red  text-white font-bold py-2 mr-2 px-4 rounded my-2 lg:my-4 cursor-not-allowed disabled:opacity-50"
-                            disabled>Reiniciar
+                        <button
+                            class="bg-cumbres-red  text-white font-bold py-2 mr-2 px-4 rounded my-2 lg:my-4"
+                            (click)="resetApp()">Reiniciar
                             reservas</button>
                         <button class="bg-cumbres-red  text-white font-bold py-2 px-4 rounded my-2 lg:my-4"
                             (click)="downloadReport()">Descargar reporte</button>
@@ -35,20 +35,20 @@
                     <div
                         class="flex items-center justify-between ring-1 ring-inset ring-gray-300 rounded-lg my-2 lg:my-4 p-2">
 
-                        @if(isChecked===false){
+                        @if(theatreIsOpen===false){
                         <span class="mr-2">Boleteria cerrada:</span>
                         }
-                        @if(isChecked===true){
+                        @if(theatreIsOpen===true){
                         <span class="mr-2">Boleteria abierta:</span>
                         }
-                        @if(isChecked!==null){
-                        <input type="checkbox" id="toggle" [(ngModel)]="isChecked" (click)="toggleChange()"
+                        @if(theatreIsOpen!==null){
+                        <input type="checkbox" id="toggle" [(ngModel)]="theatreIsOpen" (click)="toggleChange()"
                             class="hidden" />
                         <label for="toggle"
-                            [ngClass]="{'bg-green-400':isChecked,'bg-red-400':!isChecked, 'cursor-pointer w-12 h-6 bg-gray-300 rounded-full flex items-center p-1 transition-colors duration-300': true }">
+                            [ngClass]="{'bg-green-400':theatreIsOpen,'bg-red-400':!theatreIsOpen, 'cursor-pointer w-12 h-6 bg-gray-300 rounded-full flex items-center p-1 transition-colors duration-300': true }">
                             <span
                                 class="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300"
-                                [ngClass]="{'translate-x-6': isChecked===true, 'translate-x-0': isChecked===false}"></span>
+                                [ngClass]="{'translate-x-6': theatreIsOpen===true, 'translate-x-0': theatreIsOpen===false}"></span>
                         </label>
                         }
 

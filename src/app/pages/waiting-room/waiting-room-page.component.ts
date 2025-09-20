@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FamilyService } from '../../shared/family.service';
+import { AppService } from '../../shared/app.service';
 
 @Component({
   selector: 'waiting-room-page',
@@ -10,7 +11,7 @@ import { FamilyService } from '../../shared/family.service';
 })
 export class WaitingRoomPageComponent implements OnInit {
   public amountOfPeople = 0;
-  constructor(private familyService: FamilyService) {}
+  constructor(private familyService: FamilyService, private appService: AppService) {}
   ngOnInit() {
     this.familyService.peopleBeforeMe$.subscribe((response) => {
       this.amountOfPeople = response;
@@ -18,7 +19,7 @@ export class WaitingRoomPageComponent implements OnInit {
 
     this.familyService.ticketStage$.subscribe((response) => {
       if (response) {
-        this.familyService.changePage('stage');
+        this.appService.changePage('stage');
       }
     });
 
@@ -38,10 +39,10 @@ export class WaitingRoomPageComponent implements OnInit {
       this.familyService.registerFamily();
       this.familyService.detectChangeOnQueue();
     } else {
-      this.familyService.setError(
+      this.appService.setError(
         'Esta familia ya se encuentra en la cola de espera en otra sesión'
       );
-      this.familyService.changePage('error');
+      this.appService.changePage('error');
     }
   }
 }

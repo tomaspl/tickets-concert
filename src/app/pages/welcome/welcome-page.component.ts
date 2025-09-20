@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FamilyService } from '../../shared/family.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { AppService } from '../../shared/app.service';
 
 @Component({
   selector: 'welcome-page',
@@ -13,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class WelcomePageComponent {
   lastName!: string;
   availableSeats$!: Observable<number>;
-  constructor(private familyService: FamilyService) {}
+  constructor(private familyService: FamilyService, private appService: AppService) {}
   ngOnInit() {
     this.familyService.lastName$.subscribe((response) => {
       this.lastName = response;
@@ -22,6 +23,6 @@ export class WelcomePageComponent {
     this.availableSeats$ = this.familyService.availableSeats$;
   }
   goToWaitingRoom() {
-    this.familyService.changePage('waiting');
+    this.appService.changePage('waiting');
   }
 }

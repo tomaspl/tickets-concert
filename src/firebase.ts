@@ -5,13 +5,13 @@ import { initializeApp } from 'firebase/app';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyDWPJbiV3wie8AfP7pIFALuw3HcZyMFdKk',
-  authDomain: 'tickets-concert.firebaseapp.com',
-  projectId: 'tickets-concert',
-  storageBucket: 'tickets-concert.appspot.com',
-  messagingSenderId: '258820628522',
-  appId: '1:258820628522:web:b434578cbb46654e93e353',
-  databaseURL: 'https://tickets-concert-dev.firebaseio.com/',
+  apiKey: "AIzaSyDWPJbiV3wie8AfP7pIFALuw3HcZyMFdKk",
+  authDomain: "tickets-concert.firebaseapp.com",
+  databaseURL: "https://tickets-concert-default-rtdb.firebaseio.com",
+  projectId: "tickets-concert",
+  storageBucket: "tickets-concert.firebasestorage.app",
+  messagingSenderId: "258820628522",
+  appId: "1:258820628522:web:b434578cbb46654e93e353"
 };
 
 // Initialize Firebase

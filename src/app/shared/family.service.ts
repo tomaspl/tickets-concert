@@ -18,20 +18,15 @@ import { Reservation } from '../model/Reservation';
 import { Seat } from '../model/Seat';
 import { PageType } from '../model/PageType';
 import { ActivatedRoute } from '@angular/router';
-import { familiesData } from '../data/families';
-import { stageAllAvailable, stagePreventa } from '../data/stage';
 import { ToasterService } from './toaster.service';
 import { messageTicketsPerFamily, seatsPerFamily } from '../constants';
+import { AppService } from './app.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FamilyService {
   private rtdb = getDatabase(app);
-
-  private currentPage: BehaviorSubject<PageType> =
-    new BehaviorSubject<PageType>('loading');
-  public currentPage$: Observable<PageType> = this.currentPage.asObservable();
 
   private ticketStage: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
@@ -50,10 +45,6 @@ export class FamilyService {
   private families: BehaviorSubject<any> = new BehaviorSubject<any>({});
   public families$: Observable<any> = this.families.asObservable();
 
-  private available: BehaviorSubject<boolean | null> = new BehaviorSubject<
-    boolean | null
-  >(null);
-  public available$: Observable<boolean | null> = this.available.asObservable();
 
   private availableSeats: BehaviorSubject<number> = new BehaviorSubject<number>(
     0
@@ -81,31 +72,29 @@ export class FamilyService {
   public details$: Observable<Reservation[] | null> =
     this.details.asObservable();
   public familyId!: string;
-  public error!: string;
   constructor(
     private route: ActivatedRoute,
-    private toasterService: ToasterService
+    private toasterService: ToasterService,
+    private appService: AppService,
   ) {
     this.familyId = this.route.snapshot.paramMap.get('id') || '';
   }
 
   getCurrentPage() {
-    return this.currentPage$;
+    return this.appService.currentPage$;
   }
 
   setFamilyId(id: string) {
     this.familyId = id;
   }
 
-  syncAvailability() {
-    const queueRef = ref(this.rtdb, `/available/`);
+  listenIfTheatreIsOpen() {
+    const queueRef = ref(this.rtdb, `/theatreIsOpen/`);
     onValue(
       queueRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          this.available.next(snapshot.val());
-        } else {
-          console.log('No data available');
+          this.appService.theatreIsOpen.next(snapshot.val());
         }
       },
       {
@@ -130,21 +119,6 @@ export class FamilyService {
         }
       })
       .catch((error) => {
-        console.error('Error al obtener los datos: ', error);
-        return false;
-      });
-  }
-
-  appAvailability() {
-    const availableRef = ref(this.rtdb, 'available/');
-    return get(availableRef)
-      .then((snapshot: any) => {
-        if (snapshot.exists()) {
-          this.available.next(snapshot.val());
-        }
-      })
-      .catch((error) => {
-        console.error('Error al obtener los datos: ', error);
         return false;
       });
   }
@@ -167,7 +141,6 @@ export class FamilyService {
         }
       })
       .catch((error) => {
-        console.error('Error al obtener los datos: ', error);
         return false;
       });
   }
@@ -178,29 +151,22 @@ export class FamilyService {
     onValue(
       connectedRef,
       (snapshot) => {
-        console.log('Estado de conexión cambiado');
-
         if (snapshot.val() === false) {
-          console.log('Cliente desconectado');
-          return; // Cliente desconectado; salir de la función
+          return; 
         }
 
         // Cliente conectado; configurar acción onDisconnect
-        const postData = { [this.familyId]: true };
+        const postData = { [this.familyId]: true, enteredAt: Date.now() };
         const newPostKey = push(child(ref(this.rtdb), 'queue')).key;
         const userStatusDatabaseRef = ref(this.rtdb, `/queue/${newPostKey}`);
 
         // Actualizar el estado de conexión del usuario
         update(userStatusDatabaseRef, postData)
           .then(() => {
-            console.log(
-              'Actualización en base de datos completada, configurando onDisconnect...'
-            );
             // Configura la eliminación en caso de desconexión
             onDisconnect(userStatusDatabaseRef)
               .remove()
               .then(() => {
-                console.log('Acción onDisconnect configurada correctamente.');
               })
               .catch((error) => {
                 console.error('Error al configurar onDisconnect:', error);
@@ -223,7 +189,6 @@ export class FamilyService {
       (snapshot) => {
         if (snapshot.exists()) {
           const toJSON = snapshot.toJSON() as any;
-          console.log('toJson', toJSON);
           if (toJSON) {
             this.firstKey = Object.keys(toJSON)[0];
             const isItFirst = !!toJSON[this.firstKey][this.familyId];
@@ -236,8 +201,6 @@ export class FamilyService {
             }
             this.ticketStage.next(isItFirst);
           }
-        } else {
-          console.log('No data available');
         }
       },
       {
@@ -300,9 +263,7 @@ export class FamilyService {
             });
           });
           this.details.next(details);
-        } else {
-          console.log('No data available');
-        }
+        } 
       },
       {
         onlyOnce: false, // Configurar para escuchar cambios en tiempo real
@@ -321,8 +282,6 @@ export class FamilyService {
           const sections = Object.keys(main.seats);
           let data: any[] = [];
           sections.forEach((section) => {
-            console.log('section', section);
-            console.log('main.seats', main.seats);
             main.seats[section].forEach((seat: any) => {
               data.push({
                 familyCode: seat.familyCode,
@@ -372,9 +331,7 @@ export class FamilyService {
           const toJSON = snapshot.toJSON() as any;
           //const sanitizeMaptoJSON = sanitizeMap(toJSON);
           this.families.next(toJSON);
-        } else {
-          console.log('No data available');
-        }
+        } 
       },
       {
         onlyOnce: false, // Configurar para escuchar cambios en tiempo real
@@ -388,7 +345,6 @@ export class FamilyService {
     // Llamada a remove() con manejo de promesas
     remove(userStatusDatabaseRef)
       .then(() => {
-        console.log('Referencia eliminada exitosamente');
       })
       .catch((error) => {
         console.error('Error al eliminar la referencia:', error);
@@ -407,31 +363,13 @@ export class FamilyService {
       updates['/seats/' + seat.sectionName + '/' + seat.id + '/lastName'] =
         this.lastName.value;
     });
-    this.currentPage.next('thanks');
+    this.appService.currentPage.next('thanks');
     return update(ref(this.rtdb), updates);
   }
 
-  changePage(page: PageType) {
-    if (this.available.value) {
-      this.currentPage.next(page);
-    } else {
-      this.setError('La boleteria se encuentra cerrada.');
-      this.currentPage.next('error');
-    }
-  }
 
-  changeAvailability() {
-    const updates = {} as any;
-    const newValue = !this.available.value;
-    updates['/available'] = newValue;
-    if (!newValue) {
-      this.setError('La boleteria se encuentra cerrada');
-      this.currentPage.next('error');
-    }
-    this.available.next(newValue);
 
-    return update(ref(this.rtdb), updates);
-  }
+
 
   selectSeat(seat: Seat | null, sectionName: string) {
     if (this.hasById(this.selectedSeats, seat?.id)) {
@@ -441,15 +379,15 @@ export class FamilyService {
       return false;
     }
     if (
-      !this.selectedSeats.has({ id: seat?.id, sectionName }) /*&&
-      this.availableSeats.value > 0*/
+      !this.selectedSeats.has({ id: seat?.id, sectionName }) &&
+      this.availableSeats.value > 0
     ) {
       this.selectedSeats.add({ id: seat?.id, sectionName });
       this.addToSelectionDetail(sectionName, seat);
       this.availableSeats.next(this.availableSeats.value - 1);
       return true;
     }
-    //this.toasterService.showToaster(messageTicketsPerFamily);
+    this.toasterService.showToaster(messageTicketsPerFamily);
 
     return false;
   }
@@ -494,67 +432,6 @@ export class FamilyService {
     return false;
   }
 
-  hasBeenSelected(seatId: string | null) {
-    return this.hasById(this.selectedSeats, seatId);
-  }
-
-  removeQueue() {
-    const userStatusDatabaseRef = ref(this.rtdb, `/queue/`);
-
-    // Llamada a remove() con manejo de promesas
-    remove(userStatusDatabaseRef)
-      .then(() => {
-        console.log('Referencia eliminada exitosamente');
-      })
-      .catch((error) => {
-        console.error('Error al eliminar la referencia:', error);
-      });
-  }
-
-  removeFamilies() {
-    const userStatusDatabaseRef = ref(this.rtdb, `/families/`);
-
-    // Llamada a remove() con manejo de promesas
-    remove(userStatusDatabaseRef)
-      .then(() => {
-        console.log('Referencia eliminada exitosamente');
-      })
-      .catch((error) => {
-        console.error('Error al eliminar la referencia:', error);
-      });
-  }
-
-  removeStage() {
-    const userStatusDatabaseRef = ref(this.rtdb, `/seats/`);
-
-    // Llamada a remove() con manejo de promesas
-    remove(userStatusDatabaseRef)
-      .then(() => {
-        console.log('Referencia eliminada exitosamente');
-      })
-      .catch((error) => {
-        console.error('Error al eliminar la referencia:', error);
-      });
-  }
-
-  resetFamilies() {
-    const userStatusDatabaseRef = ref(this.rtdb, `/families/`);
-    update(userStatusDatabaseRef, familiesData).then(() => {
-      console.log(
-        'Actualización en base de datos completada, configurando onDisconnect...'
-      );
-    });
-  }
-
-  resetStage() {
-    const userStatusDatabaseRef = ref(this.rtdb, `/seats/`);
-
-    update(userStatusDatabaseRef, stagePreventa).then(() => {
-      console.log(
-        'Actualización en base de datos completada, configurando onDisconnect...'
-      );
-    });
-  }
 
   /*openPreventa() {
     const userStatusDatabaseRef = ref(this.rtdb, `/seats/`);
@@ -566,15 +443,5 @@ export class FamilyService {
     });
   }*/
 
-  resetApp() {
-    this.removeQueue();
-    this.removeFamilies();
-    this.removeStage();
-    this.resetFamilies();
-    this.resetStage();
-  }
 
-  setError(error: string) {
-    this.error = error;
-  }
 }
