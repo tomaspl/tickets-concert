@@ -108,3 +108,4 @@ export class AppService {
   setError(error: string) {
     this.error = error;
   }
+}
