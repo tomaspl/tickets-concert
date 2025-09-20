@@ -9,6 +9,8 @@ import {
   onDisconnect,
   get,
   remove,
+  query,
+  orderByChild,
 } from 'firebase/database';
 import app from '../../firebase';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -27,6 +29,7 @@ import { AppService } from './app.service';
 })
 export class FamilyService {
   private rtdb = getDatabase(app);
+  private serverOffset = 0;
 
   private ticketStage: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
@@ -78,6 +81,29 @@ export class FamilyService {
     private appService: AppService,
   ) {
     this.familyId = this.route.snapshot.paramMap.get('id') || '';
+    this.listenServerTimeOffset();
+  }
+
+  /** Mantiene serverOffset usando .info/serverTimeOffset */
+  listenServerTimeOffset() {
+    try {
+      const offsetRef = ref(this.rtdb, '.info/serverTimeOffset');
+      onValue(
+        offsetRef,
+        (snap) => {
+          if (snap.exists()) {
+            this.serverOffset = snap.val() || 0;
+          }
+        },
+        { onlyOnce: false }
+      );
+    } catch (e) {
+      console.error('No se pudo leer serverTimeOffset', e);
+    }
+  }
+
+  getServerNow(): number {
+    return Date.now() + (this.serverOffset || 0);
   }
 
   getCurrentPage() {
@@ -124,23 +150,12 @@ export class FamilyService {
   }
 
   familyOnQueue(familyId: string) {
-    const queueRef = ref(this.rtdb, 'queue');
+    const queueRef = ref(this.rtdb, `queue/${familyId}`);
     return get(queueRef)
       .then((snapshot: any) => {
-        if (snapshot.exists()) {
-          let found = false;
-          snapshot.forEach((childSnapshot: any) => {
-            const data = childSnapshot.val();
-            if (data.hasOwnProperty(familyId)) {
-              found = true;
-            }
-          });
-          return found;
-        } else {
-          return false;
-        }
+        return snapshot.exists();
       })
-      .catch((error) => {
+      .catch(() => {
         return false;
       });
   }
@@ -156,21 +171,21 @@ export class FamilyService {
         }
 
         // Cliente conectado; configurar acción onDisconnect
-        const postData = { [this.familyId]: true, enteredAt: Date.now() };
-        const newPostKey = push(child(ref(this.rtdb), 'queue')).key;
-        const userStatusDatabaseRef = ref(this.rtdb, `/queue/${newPostKey}`);
+        // Usar familyId como clave para evitar duplicados
+        const postData = { familyId: this.familyId, enteredAt: Date.now() };
+        const userStatusDatabaseRef = ref(this.rtdb, `/queue/${this.familyId}`);
 
-        // Actualizar el estado de conexión del usuario
+        // Actualizar o crear la entrada de la familia en la cola
         update(userStatusDatabaseRef, postData)
           .then(() => {
             // Configura la eliminación en caso de desconexión
-            onDisconnect(userStatusDatabaseRef)
+            /*onDisconnect(userStatusDatabaseRef)
               .remove()
               .then(() => {
               })
               .catch((error) => {
                 console.error('Error al configurar onDisconnect:', error);
-              });
+              });*/
           })
           .catch((error) => {
             console.error('Error al actualizar la base de datos:', error);
@@ -184,29 +199,69 @@ export class FamilyService {
 
   detectChangeOnQueue() {
     const queueRef = ref(this.rtdb, `/queue/`);
+    const q = query(queueRef, orderByChild('enteredAt'));
     onValue(
-      queueRef,
+      q,
       (snapshot) => {
         if (snapshot.exists()) {
-          const toJSON = snapshot.toJSON() as any;
-          if (toJSON) {
-            this.firstKey = Object.keys(toJSON)[0];
-            const isItFirst = !!toJSON[this.firstKey][this.familyId];
-            if (!isItFirst) {
-              Object.keys(toJSON).forEach((item, index) => {
-                if (toJSON[item][this.familyId]) {
-                  this.peopleBeforeMe.next(index);
-                }
-              });
-            }
-            this.ticketStage.next(isItFirst);
+          const items: any[] = [];
+          snapshot.forEach((childSnapshot: any) => {
+            const val = childSnapshot.val();
+            items.push({ key: childSnapshot.key, ...val });
+          });
+          // items already ordered by enteredAt due to the query
+          const first = items[0];
+          const isItFirst = first && first.familyId === this.familyId;
+          // Si soy el primero y no tengo onStageAt, fijarlo ahora
+          if (isItFirst && first && !first.onStageAt) {
+            const onStageRef = ref(this.rtdb, `/queue/${first.key}`);
+            update(onStageRef, { onStageAt: Date.now() }).catch((err) => {
+              console.error('Error setting onStageAt:', err);
+            });
           }
+          if (!isItFirst) {
+            const index = items.findIndex((it: any) => it.familyId === this.familyId);
+            this.peopleBeforeMe.next(index === -1 ? 0 : index);
+          } else {
+            this.peopleBeforeMe.next(0);
+          }
+          this.ticketStage.next(isItFirst);
+        } else {
+          this.ticketStage.next(false);
+          this.peopleBeforeMe.next(0);
         }
       },
       {
         onlyOnce: false, // Configurar para escuchar cambios en tiempo real
       }
     );
+  }
+
+  /** Devuelve onStageAt si existe */
+  getQueueOnStageAt(familyId?: string): Promise<number | null> {
+    const id = familyId || this.familyId;
+    if (!id) return Promise.resolve(null);
+    const entryRef = ref(this.rtdb, `queue/${id}`);
+    return get(entryRef)
+      .then((snapshot: any) => {
+        if (!snapshot.exists()) return null;
+        const val = snapshot.val();
+        if (val.onStageAt) return val.onStageAt;
+        return null;
+      })
+      .catch(() => null);
+  }
+
+  /**
+   * Observa el nodo /queue/{familyId}. Devuelve la función de unsubscribe.
+   * callback recibe el snapshot (como en onValue).
+   */
+  watchQueueEntry(callback: (snapshot: any) => void) {
+    const id = this.familyId;
+    if (!id) return () => {};
+    const nodeRef = ref(this.rtdb, `queue/${id}`);
+    const unsubscribe = onValue(nodeRef, (snap) => callback(snap));
+    return unsubscribe;
   }
 
   removeFromSelectionDetail(sectionName: string, seat: Seat | null) {
@@ -339,13 +394,30 @@ export class FamilyService {
     );
   }
 
-  removeFromQueue() {
-    const userStatusDatabaseRef = ref(this.rtdb, `/queue/${this.firstKey}`);
-
-    // Llamada a remove() con manejo de promesas
-    remove(userStatusDatabaseRef)
-      .then(() => {
+  /**
+   * Devuelve el timestamp enteredAt de la entrada en /queue para la familia
+   * Si no existe devuelve null
+   */
+  getQueueEnteredAt(familyId?: string): Promise<number | null> {
+    const id = familyId || this.familyId;
+    if (!id) return Promise.resolve(null);
+    const entryRef = ref(this.rtdb, `queue/${id}`);
+    return get(entryRef)
+      .then((snapshot: any) => {
+        if (!snapshot.exists()) return null;
+        const val = snapshot.val();
+        // El nodo puede ser { familyId, enteredAt } o { <familyId>: true, enteredAt }
+        if (val.enteredAt) return val.enteredAt;
+        const keys = Object.keys(val).filter((k) => k !== 'enteredAt');
+        return keys.length > 0 ? val.enteredAt || null : null;
       })
+      .catch(() => null);
+  }
+
+  removeFromQueue() {
+    const userStatusDatabaseRef = ref(this.rtdb, `/queue/${this.familyId}`);
+    remove(userStatusDatabaseRef)
+      .then(() => {})
       .catch((error) => {
         console.error('Error al eliminar la referencia:', error);
       });

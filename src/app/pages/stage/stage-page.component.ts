@@ -40,6 +40,7 @@ export class StagePageComponent implements OnInit {
   public countdownSubscription!: Subscription;
   public countdownActive = false;
   public formattedTime!: string;
+  private queueUnsubscribe: any;
 
   constructor(
     private familyService: FamilyService,
@@ -66,33 +67,81 @@ export class StagePageComponent implements OnInit {
 
   ngOnInit() {
     this.startCountdown();
-    this.appService.theatreIsOpen$.subscribe((response) => {
-      if (response === false) {
-        this.countdownSubscription.unsubscribe();
+    this.queueUnsubscribe = this.familyService.watchQueueEntry((snap: any) => {
+      if (!snap.exists()) {
+        // Fui expulsado en el servidor
+        this.stopCountdown();
+        this.appService.changePage('expired-time');
+        return;
+      }
+      const val = snap.val();
+      const onStageAt = val.onStageAt || val.enteredAt;
+      if (onStageAt) {
+        this.recalculateFromServer(onStageAt);
       }
     });
+    this.appService.theatreIsOpen$.subscribe((response) => {
+      if (response === false) {
+        this.stopCountdown();
+      }
+    });
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
   }
+
+  handleVisibilityChange = () => {
+    if (!document.hidden) {
+      // re-sincronizar
+      this.familyService.getQueueOnStageAt().then((onStageAt) => {
+        if (onStageAt) this.recalculateFromServer(onStageAt);
+      });
+    }
+  };
 
   // Inicia el temporizador
   startCountdown() {
     this.countdownActive = true;
-    this.timeRemaining = 122; // Tiempo en segundos (2 minutos)
-    this.updateFormattedTime(); // Actualiza el tiempo formateado inicialmente
+    // Intentar leer onStageAt desde la base de datos; fallback a enteredAt
+    Promise.all([
+      this.familyService.getQueueOnStageAt(),
+      this.familyService.getQueueEnteredAt(),
+    ]).then(([onStageAt, enteredAt]) => {
+      const now = Math.floor(Date.now());
+      const totalAllowed = 2 * 60 * 1000; // 2 minutos en ms
+      let base = onStageAt || enteredAt;
+      if (base) {
+        const elapsed = now - base;
+        const remainingMs = Math.max(0, totalAllowed - elapsed);
+        this.timeRemaining = Math.ceil(remainingMs / 1000);
+      } else {
+        this.timeRemaining = 122; // Fallback por si no hay timestamps
+      }
+      this.updateFormattedTime(); // Actualiza el tiempo formateado inicialmente
 
-    // Configura el observable que cuenta hacia atrás
-    this.countdownSubscription = interval(1000)
-      .pipe(
-        takeWhile(() => this.timeRemaining > 0), // Continuar hasta que el tiempo llegue a 0
-        map(() => --this.timeRemaining) // Disminuir el contador en 1 segundo
-      )
-      .subscribe({
-        next: () => {
-          this.updateFormattedTime(); // Actualiza el tiempo formateado en cada tick
-          if (this.timeRemaining === 0) {
-            this.onCountdownFinished(); // Llamar a la acción cuando el temporizador finaliza
+      // Configura el observable que cuenta hacia atrás usando tiempo del servidor
+      this.countdownSubscription = interval(1000)
+        .pipe(takeWhile(() => this.timeRemaining > 0))
+        .subscribe(() => {
+          // recalcular cada tick con server time
+          const serverNow = this.familyService.getServerNow();
+          const totalAllowed = 2 * 60 * 1000;
+          const base = onStageAt || enteredAt || null;
+          if (base) {
+            const remainingMs = Math.max(0, totalAllowed - (serverNow - base));
+            this.timeRemaining = Math.ceil(remainingMs / 1000);
+            this.updateFormattedTime();
+            if (this.timeRemaining === 0) this.onCountdownFinished();
           }
-        },
-      });
+        });
+    });
+  }
+
+  recalculateFromServer(baseTs: number) {
+    const now = this.familyService.getServerNow();
+    const totalAllowed = 2 * 60 * 1000;
+    const remainingMs = Math.max(0, totalAllowed - (now - baseTs));
+    this.timeRemaining = Math.ceil(remainingMs / 1000);
+    this.updateFormattedTime();
+    if (this.timeRemaining === 0) this.onCountdownFinished();
   }
 
   // Actualiza el tiempo formateado como mm:ss
@@ -128,6 +177,15 @@ export class StagePageComponent implements OnInit {
     }
   }
   ngOnDestroy() {
-    this.countdownSubscription.unsubscribe();
+    if (this.countdownSubscription) this.countdownSubscription.unsubscribe();
+    if (this.queueUnsubscribe) this.queueUnsubscribe();
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+  }
+
+  stopCountdown() {
+    if (this.countdownSubscription) {
+      this.countdownSubscription.unsubscribe();
+    }
+    this.countdownActive = false;
   }
 }
