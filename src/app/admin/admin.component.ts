@@ -1,98 +1,104 @@
-import { Component, OnInit } from '@angular/core';
-import { FamilyService } from '../shared/family.service';
-import { AppService } from '../shared/app.service';
-import { Family } from '../model/Family';
-import { sanitizeFamily } from '../utils/map';
-import { environment } from '../../environments/environment';
-import { filter, take } from 'rxjs/operators';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
-import { MapComponent } from '../theater/map/map.component';
-import { preventaAvailable } from '../constants';
+import { Component, OnInit } from '@angular/core'
+import { FamilyService } from '../shared/family.service'
+import { AppService } from '../shared/app.service'
+import { Family } from '../model/Family'
+import { sanitizeFamily } from '../utils/map'
+import { environment } from '../../environments/environment'
+import { filter, take } from 'rxjs/operators'
+import { FormsModule } from '@angular/forms'
+import { CommonModule } from '@angular/common'
+import { Observable } from 'rxjs'
+import { MapComponent } from '../theater/map/map.component'
+import { preventaAvailable } from '../constants'
+import { TailwindClassDirective } from '../shared/directives/tailwind-class.directive'
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [FormsModule, CommonModule, MapComponent],
+  imports: [FormsModule, CommonModule, MapComponent, TailwindClassDirective],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
 })
 export class AdminComponent implements OnInit {
-  families: Family[] = [];
-  familiesSearch: Family[] = [];
-  url: string;
-  theatreIsOpen: boolean | null = null;
-  showMap = false;
+  families: Family[] = []
+  familiesSearch: Family[] = []
+  url: string
+  theatreIsOpen: boolean | null = null
+  showMap = false
   //public available$!: Observable<boolean | null>;
-  preventa = preventaAvailable;
-  constructor(private familyService: FamilyService, private appService: AppService) {
-    this.url = environment.url;
-    this.familyService.fetchStageMap();
+  preventa = preventaAvailable
+  constructor(
+    private familyService: FamilyService,
+    private appService: AppService,
+  ) {
+    this.url = environment.url
+    this.familyService.fetchStageMap()
   } // Inyección de dependencias en el constructor
 
   async toggleChange() {
-    await this.appService.changeAvailability();
+    await this.appService.changeAvailability()
   }
 
   toggleMap() {
-    this.showMap = !this.showMap;
+    this.showMap = !this.showMap
   }
 
   ngOnInit(): void {
-    this.familyService.listenIfTheatreIsOpen();
-    this.familyService.fetchFamilies();
+    this.familyService.listenIfTheatreIsOpen()
+    this.familyService.fetchFamilies()
     this.appService.theatreIsOpen$.subscribe((response) => {
       if (response !== null) {
-        this.theatreIsOpen = !!response;
+        this.theatreIsOpen = !!response
       }
-    });
+    })
     this.familyService.families$
       .pipe(
         filter((response) => Object.keys(response).length > 0), // Ignorar arrays vacíos
-        take(1) // Tomar solo la primera emisión con datos
+        take(1), // Tomar solo la primera emisión con datos
       )
       .subscribe((response) => {
-        const families = sanitizeFamily(response);
-        this.families = families;
-        this.familiesSearch = families;
-      });
+        const families = sanitizeFamily(response)
+        this.families = families
+        this.familiesSearch = families
+      })
   }
   get orderedFamilies() {
     return this.familiesSearch.sort((a, b) => {
-      return a.preventa === b.preventa ? 0 : a.preventa ? -1 : 1;
-    });
+      return a.preventa === b.preventa ? 0 : a.preventa ? -1 : 1
+    })
   }
   keyUpHandler($event: any) {
-    const word = $event?.target.value.toUpperCase();
+    const word = $event?.target.value.toUpperCase()
     this.familiesSearch = this.families.filter(
-      (fam) => fam.lastName.indexOf(word) > -1
-    );
+      (fam) => fam.lastName.indexOf(word) > -1,
+    )
   }
 
   resetApp() {
-    this.appService.resetApp();
+    this.appService.resetApp()
+  }
+
+  goToCola() {
+    window.open('/admin/cola', '_self')
   }
 
   downloadReport() {
-    this.familyService.downloadReport('reporte.csv', 'text/plain');
+    this.familyService.downloadReport('reporte.csv', 'text/plain')
   }
 
   copyUrl(url: string, family: HTMLElement) {
-    family.classList.add('animate-bg');
+    family.classList.add('animate-bg')
     // Después de 2 segundos, volver al color original
     setTimeout(() => {
-      family.classList.remove('animate-bg');
-    }, 1000); //
+      family.classList.remove('animate-bg')
+    }, 1000) //
     navigator.clipboard
       .writeText(url)
-      .then(() => {
-      })
-      .catch((err) => {
-      });
+      .then(() => {})
+      .catch((err) => {})
   }
 
   goTo(url: string) {
-    window.open(url);
+    window.open(url)
   }
 }

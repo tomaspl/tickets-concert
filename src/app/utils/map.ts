@@ -1,12 +1,12 @@
-import { Family } from '../model/Family';
-import { Seat } from '../model/Seat';
-import { SectionStage } from '../model/SectionStage';
+import { Family } from '../model/Family'
+import { Seat } from '../model/Seat'
+import { SectionStage } from '../model/SectionStage'
 
 export function sanitizeMap(toJSON: any) {
-  const stageMap: SectionStage[] = [];
+  const stageMap: SectionStage[] = []
   Object.keys(toJSON).forEach((section) => {
-    let seats: Seat[][] = [];
-    let currentRow = 0;
+    let seats: Seat[][] = []
+    let currentRow = 0
     Object.keys(toJSON[section]).forEach((seat) => {
       if (currentRow !== toJSON[section][seat].row) {
         //seats=[];
@@ -20,8 +20,8 @@ export function sanitizeMap(toJSON: any) {
             enabled: toJSON[section][seat].enabled,
             id: seat,
           },
-        ];
-        seats.push(data);
+        ]
+        seats.push(data)
       } else {
         const data: Seat = {
           row: toJSON[section][seat].row,
@@ -31,23 +31,23 @@ export function sanitizeMap(toJSON: any) {
           familyId: toJSON[section][seat].familyId,
           enabled: toJSON[section][seat].enabled,
           id: seat,
-        };
-        const currentIndex = seats.length - 1;
-        seats[currentIndex].push(data);
+        }
+        const currentIndex = seats.length - 1
+        seats[currentIndex].push(data)
       }
-      currentRow = toJSON[section][seat].row;
-    });
+      currentRow = toJSON[section][seat].row
+    })
     const sectionObject: SectionStage = {
       sectionName: section,
       seats,
-    };
-    stageMap.push(sectionObject);
-  });
-  return stageMap;
+    }
+    stageMap.push(sectionObject)
+  })
+  return stageMap
 }
 
 export function sanitizeFamily(toJSON: any) {
-  const families: Family[] = [];
+  const families: Family[] = []
   Object.keys(toJSON).forEach((familyId) => {
     const familyData: Family = {
       familyId: familyId,
@@ -55,8 +55,8 @@ export function sanitizeFamily(toJSON: any) {
       lastName: toJSON[familyId].lastName,
       availableSeats: toJSON[familyId].availableSeats,
       preventa: toJSON[familyId].preventa,
-    };
-    families.push(familyData);
-  });
-  return families;
+    }
+    families.push(familyData)
+  })
+  return families
 }

@@ -1,22 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { ErrorPageComponent } from './error-page.component';
+import { ErrorPageComponent } from './error-page.component'
 
 describe('ExpiredTimeComponent', () => {
-  let component: ErrorPageComponent;
-  let fixture: ComponentFixture<ErrorPageComponent>;
+  let component: ErrorPageComponent
+  let fixture: ComponentFixture<ErrorPageComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ErrorPageComponent],
-    }).compileComponents();
+    }).compileComponents()
 
-    fixture = TestBed.createComponent(ErrorPageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(ErrorPageComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

@@ -1,10 +1,12 @@
 <div class="fixed top-0 right-0 m-4 w-96 space-y-2">
-    <div *ngFor="let toaster of toasters"
-        class="bg-red-500 text-white p-4 rounded shadow-lg transform transition-transform duration-300 ease-in-out"
-        [ngClass]="{
-        'animate-drop': toaster.visible,
-        'opacity-0': !toaster.visible
-      }">
-        {{ toaster.message }}
-    </div>
+  <div
+    *ngFor="let toaster of toasters"
+    class="bg-red-500 text-white p-4 rounded shadow-lg transform transition-transform duration-300 ease-in-out"
+    [ngClass]="{
+      'animate-drop': toaster.visible,
+      'opacity-0': !toaster.visible,
+    }"
+  >
+    {{ toaster.message }}
+  </div>
 </div>

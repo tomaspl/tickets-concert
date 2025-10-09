@@ -7505,7 +7505,7 @@ const stageAllAvailable = {
       enabled: true,
     },
   ],
-};
+}
 
 const stagePreventa = {
   '1-Palcos Altos': [
@@ -15014,6 +15014,6 @@ const stagePreventa = {
       enabled: false,
     },
   ],
-};
+}
 
-export { stageAllAvailable, stagePreventa };
+export { stageAllAvailable, stagePreventa }

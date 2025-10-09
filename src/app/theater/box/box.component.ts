@@ -1,51 +1,94 @@
-import { Component, Input } from '@angular/core';
-import { Seat } from '../../model/Seat';
-import { FamilyService } from '../../shared/family.service';
-import { CommonModule } from '@angular/common';
-import { ToasterService } from '../../shared/toaster.service';
-import { availableSoon, preventaAvailable } from '../../constants';
+import { Component, computed, Input } from '@angular/core'
+import { Seat } from '../../model/Seat'
+import { FamilyService } from '../../shared/family.service'
+import { CommonModule } from '@angular/common'
+import { ToasterService } from '../../shared/toaster.service'
+import { availableSoon, preventaAvailable } from '../../constants'
+import { TailwindClassDirective } from '../../shared/directives/tailwind-class.directive'
+import { ModalAdminSeatAssignComponent } from '../../shared/components/modal-admin-seat-assign/modal-admin-seat-assign.component'
+import { ModalAdminSeatFreeComponent } from '../../shared/components/modal-admin-seat-free/modal-admin-seat-free.component'
 
 @Component({
   selector: 'app-box',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    TailwindClassDirective,
+    ModalAdminSeatAssignComponent,
+    ModalAdminSeatFreeComponent,
+  ],
   templateUrl: './box.component.html',
   styleUrl: './box.component.css',
 })
 export class BoxComponent {
-  @Input() sectionName!: string;
-  @Input() seat!: Seat;
+  @Input() sectionName!: string
+  @Input() seat!: Seat
 
-  public selected = false;
+  public selected = false
 
-  public currentFamilyCode: number;
-  preventa = preventaAvailable;
-  availableSoon = availableSoon;
+  public currentFamilyCode: number
+  preventa = preventaAvailable
+  availableSoon = availableSoon
+  adminLookingAOccupiedSeat = computed(() => {
+    return !this.currentFamilyCode && this.seat && this.seat.lastName
+  })
+  adminLookingAAvailableSeat = computed(() => {
+    return (
+      !this.currentFamilyCode &&
+      this.seat &&
+      this.seat.seat &&
+      this.seat.seat > 0 &&
+      !this.seat.lastName
+    )
+  })
 
+  userLookingAOcupiedSeat = computed(() => {
+    return (
+      this.currentFamilyCode &&
+      this.seat.familyCode &&
+      this.seat.familyCode !== this.currentFamilyCode
+    )
+  })
+
+  userLookingTheirOwnSeat = computed(() => {
+    return (
+      this.currentFamilyCode &&
+      this.seat.familyCode &&
+      this.seat.familyCode === this.currentFamilyCode
+    )
+  })
+
+  userLookingAAvailableSeat = computed(() => {
+    return (
+      this.currentFamilyCode &&
+      this.seat &&
+      this.seat.seat &&
+      this.seat.seat > 0 &&
+      !this.seat.familyCode
+    )
+  })
   constructor(
     private familyService: FamilyService,
-    private toasterService: ToasterService
+    private toasterService: ToasterService,
   ) {
-    this.currentFamilyCode = this.familyService.familyCode;
+    this.currentFamilyCode = this.familyService.familyCode
   }
 
   selectBox(seat: Seat | null, sectionName: string) {
     if ((seat && seat.enabled) || !this.preventa) {
-      this.selected = this.familyService.selectBox(seat, sectionName);
+      this.selected = this.familyService.selectBox(seat, sectionName)
     } else {
-      this.toasterService.showToaster(this.availableSoon);
+      this.toasterService.showToaster(this.availableSoon)
     }
   }
 
   seatOfOtherUser() {
     this.toasterService.showToaster(
-      'El lugar ya ha sido reservado por otra familia'
-    );
+      'El lugar ya ha sido reservado por otra familia',
+    )
   }
 
   seatAlreadyReservated() {
-    this.toasterService.showToaster(
-      'El lugar ya ha sido confirmado para usted'
-    );
+    this.toasterService.showToaster('El lugar ya ha sido confirmado para usted')
   }
 }

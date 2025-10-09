@@ -1,90 +1,96 @@
-@if(mapStage.length>0){<div class="w-auto flex justify-center">
+@if (mapStage.length > 0) {
+  <div class="w-auto flex justify-center">
     <div class="parent border-black border-2 mb-24 w-full">
-        <div class="empty ">&nbsp;</div>
-        <div class="bg-black h-full">&nbsp;</div>
-        <div class="stage bg-black h-8"></div>
-        <div class="stage bg-black h-8">
-            <p class="mt-1 bg-black text-white">Escenario</p>
-        </div>
-        <div class="stage bg-black h-8"></div>
-        <div class="bg-black h-fulj">&nbsp;</div>
-        <div class="empty">&nbsp;</div>
+      <div class="empty">&nbsp;</div>
+      <div class="bg-black h-full">&nbsp;</div>
+      <div class="stage bg-black h-8"></div>
+      <div class="stage bg-black h-8">
+        <p class="mt-1 bg-black text-white">Escenario</p>
+      </div>
+      <div class="stage bg-black h-8"></div>
+      <div class="bg-black h-fulj">&nbsp;</div>
+      <div class="empty">&nbsp;</div>
 
-        <div class="empty">&nbsp;</div>
-        <div class="bg-black h-full">&nbsp;</div>
-        <div class="empty">&nbsp;</div>
-        <div class="empty">&nbsp;</div>
-        <div class="empty">&nbsp;</div>
-        <div class="bg-black h-full">&nbsp;</div>
-        <div class="empty">&nbsp;</div>
+      <div class="empty">&nbsp;</div>
+      <div class="bg-black h-full">&nbsp;</div>
+      <div class="empty">&nbsp;</div>
+      <div class="empty">&nbsp;</div>
+      <div class="empty">&nbsp;</div>
+      <div class="bg-black h-full">&nbsp;</div>
+      <div class="empty">&nbsp;</div>
 
-        @for (stage of mapStage; track stage) {
-        @if(stage.sectionName==='6-Superpullman'){
-        <div class="bg-transparent h-0.5">&nbsp;</div>
-        <div class="bg-transparent h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-transparent h-0.5">&nbsp;</div>
-        <div class="bg-transparent h-0.5">&nbsp;</div>
+      @for (stage of mapStage; track stage) {
+        @if (stage.sectionName === '6-Superpullman') {
+          <div class="bg-transparent h-0.5">&nbsp;</div>
+          <div class="bg-transparent h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-transparent h-0.5">&nbsp;</div>
+          <div class="bg-transparent h-0.5">&nbsp;</div>
         }
-        @if(stage.sectionName==='6-Superpullman'){
-
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
+        @if (stage.sectionName === '6-Superpullman') {
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
         }
 
-        @if(stage.sectionName==='7-Pullman'){
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div class="bg-black h-0.5">&nbsp;</div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
+        @if (stage.sectionName === '7-Pullman') {
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div class="bg-black h-0.5">&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
         }
-        @if(stage.sectionName.includes('5-')){
-        <div class="bg-black">&nbsp;</div>
+        @if (stage.sectionName.includes('5-')) {
+          <div class="bg-black">&nbsp;</div>
         }
         <div class="containerSeats">
-            @for (seatRow of stage.seats; track seatRow) {
-            <app-section [sectionName]="stage.sectionName" [seatsRow]="seatRow"></app-section>
-            }
-            @if(stage.sectionName.includes('1-') || stage.sectionName.includes('5-')){
-
+          @for (seatRow of stage.seats; track seatRow) {
+            <app-section
+              [sectionName]="stage.sectionName"
+              [seatsRow]="seatRow"
+            ></app-section>
+          }
+          @if (
+            stage.sectionName.includes('1-') || stage.sectionName.includes('5-')
+          ) {
             <p class="text-center mb-3 mt-2">Palcos Planta Alta</p>
-            }
+          }
 
-            @if(stage.sectionName.includes('2-') || stage.sectionName.includes('4-')){
-
+          @if (
+            stage.sectionName.includes('2-') || stage.sectionName.includes('4-')
+          ) {
             <p class="text-center mb-3 mt-2">Palcos Planta Baja</p>
-            }
+          }
 
-            @if(stage.sectionName.includes('3-')){
-
+          @if (stage.sectionName.includes('3-')) {
             <p class="text-center mb-3 mt-2">Planta Baja</p>
-            }
-            @if(stage.sectionName.includes('6-')){
-
+          }
+          @if (stage.sectionName.includes('6-')) {
             <p class="text-center mb-3 mt-2">Primer Piso</p>
-            }
-            @if(stage.sectionName.includes('7-')){
-
+          }
+          @if (stage.sectionName.includes('7-')) {
             <p class="text-center mb-3 mt-2">Segundo Piso</p>
-            }
+          }
         </div>
-        @if(stage.sectionName==='6-Superpullman' || stage.sectionName==='7-Pullman'){
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
+        @if (
+          stage.sectionName === '6-Superpullman' ||
+          stage.sectionName === '7-Pullman'
+        ) {
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
         }
-        @if(stage.sectionName.includes('1-')){
-        <div class="bg-black">&nbsp;</div> }
+        @if (stage.sectionName.includes('1-')) {
+          <div class="bg-black">&nbsp;</div>
         }
+      }
     </div>
-</div>
+  </div>
 }

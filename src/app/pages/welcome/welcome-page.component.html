@@ -1,29 +1,28 @@
 <!--<div *ngIf="lastName && (availableSeats$ | async) as availableSeats">-->
 <div *ngIf="lastName">
-    <ng-container>
-        <p class="mt-6 text-lg leading-8 text-gray-600">
-            A continuación podrá reservar entradas para el Concert 2024: Move to the Beat of your Brain que se realizará
-            el día martes 12 de noviembre.
-        </p>
-        <div class="mt-10 flex items-center justify-center gap-x-6">
-            <button (click)="goToWaitingRoom()"
-                class="rounded-md bg-cumbres-red px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">
-                Comenzar
-            </button>
-        </div>
-    </ng-container>
+  <ng-container>
+    <p class="mt-6 text-lg leading-8 text-gray-600">
+      A continuación podrá reservar entradas para el Concert 2024: Move to the
+      Beat of your Brain que se realizará el día martes 12 de noviembre.
+    </p>
+    <div class="mt-10 flex items-center justify-center gap-x-6">
+      <button (click)="goToWaitingRoom()" [appTailwindClass]="'btn-primary'">
+        Comenzar
+      </button>
+    </div>
+  </ng-container>
 </div>
 
 <ng-template #noSeatsAvailable>
-    <p class="mt-6 text-lg leading-8 text-gray-600">
-        Las entradas para su familia ya fueron reservadas
-    </p>
+  <p class="mt-6 text-lg leading-8 text-gray-600">
+    Las entradas para su familia ya fueron reservadas
+  </p>
 </ng-template>
 
 <div *ngIf="!lastName">
-    <div class="p-4 max-w-sm w-full mx-auto flex justify-center">
-        <svg class="animate-spin h-5 w-5 bg-cumbres-red" viewBox="0 0 24 24">
-            <!-- ... -->
-        </svg>
-    </div>
+  <div class="p-4 max-w-sm w-full mx-auto flex justify-center">
+    <svg [appTailwindClass]="'btn-cumbres'" viewBox="0 0 24 24">
+      <!-- ... -->
+    </svg>
+  </div>
 </div>

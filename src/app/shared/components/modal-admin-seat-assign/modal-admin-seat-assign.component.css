@@ -1,0 +1,4 @@
+/* modal.component.css */
+.modal-content {
+  /*@apply bg-white rounded-lg p-6 shadow-lg max-w-lg mx-auto;*/
+}

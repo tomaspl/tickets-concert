@@ -1,10 +1,7 @@
 .animated-div {
+  transition: background-color 0.5s ease; /* Duración de la transición */
+}
 
-    
-
-    transition: background-color 0.5s ease; /* Duración de la transición */
-  }
-  
-  .animated-div.animate-bg {
-    background-color: rgb(252 165 165); /* Color durante la animación */
-  }
+.animated-div.animate-bg {
+  background-color: rgb(252 165 165); /* Color durante la animación */
+}

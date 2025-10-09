@@ -6,4 +6,4 @@ export type PageType =
   | 'stage'
   | 'thanks'
   | 'close'
-  | 'error';
+  | 'error'

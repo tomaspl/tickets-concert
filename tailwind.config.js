@@ -1,10 +1,6 @@
-import withMT from "@material-tailwind/html/utils/withMT";
-
 /** @type {import('tailwindcss').Config} */
-module.exports = withMT({
-  content: [
-    "./src/**/*.{html,ts}",
-  ],
+module.exports = {
+  content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
       colors: {
@@ -13,7 +9,7 @@ module.exports = withMT({
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
-    }
+    },
   },
   plugins: [],
-});
+}

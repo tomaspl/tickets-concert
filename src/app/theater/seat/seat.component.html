@@ -1,107 +1,184 @@
-@if(!currentFamilyCode && seat && seat.lastName){
-
-<div class="relative group inline-block">
-    <div
-        class="shadow-gray-800 shadow-md absolute -top-12 left-1/2 transform -translate-x-1/2 hidden group-hover:flex group-hover:justify-center group-hover: items-center bg-gray-800 text-white text-sm rounded py-1 px-2 z-10 w-36 h-12">
-        {{seat.lastName}} {{seat.familyCode && seat.familyCode<10000? '(' +seat.familyCode+')' :''}} <div
-            class="shadow-gray-800 shadow-md tooltip-arrow absolute w-3 h-3 bg-gray-800 transform rotate-45 left-1/2 -translate-x-1/2 mt-8 top-2">
+@if (adminLookingAOccupiedSeat()) {
+  <div class="relative group inline-block">
+    <div [appTailwindClass]="'tooltip-admin'">
+      {{ seat.lastName }}
+      {{
+        seat.familyCode && seat.familyCode < 10000
+          ? '(' + seat.familyCode + ')'
+          : ''
+      }}
     </div>
-</div>
-<div class="w-4 h-4 opacity-50 rounded-full m-1 leading-4"
-    [ngClass]="{'bg-red-100':sectionName.includes('Platea'), 'bg-green-100':sectionName.includes('Super'), 'bg-blue-100':sectionName.includes('Pullman')}">
-    <svg class="icono-x" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <div
+      class="w-4 h-4 opacity-50 rounded-full m-1 leading-4"
+      [ngClass]="{
+        'bg-red-100': sectionName.includes('Platea'),
+        'bg-green-100': sectionName.includes('Super'),
+        'bg-blue-100': sectionName.includes('Pullman'),
+      }"
+      (click)="modalFree.openModal()"
+    >
+      <svg
+        class="icono-x"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <line x1="20" y1="4" x2="4" y2="20" stroke="red" stroke-width="4" />
         <line x1="4" y1="4" x2="20" y2="20" stroke="red" stroke-width="4" />
-    </svg>
-</div>
-</div>
-
-
+      </svg>
+    </div>
+  </div>
 }
 
-@if(!currentFamilyCode && seat && seat.seat && seat.seat>0 && !seat.lastName){
-<div class="relative group inline-block">
+@if (adminLookingAAvailableSeat()) {
+  <div class="relative group inline-block">
+    <div [appTailwindClass]="'tooltip-24'">
+      Disponible
+      <div [appTailwindClass]="'tooltip-arrow'"></div>
+    </div>
+
     <div
-        class="shadow-gray-800 shadow-md absolute -top-12 left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2 z-10 w-24">
-        Disponible
-        <div
-            class="shadow-gray-800 shadow-md tooltip-arrow absolute w-3 h-3 bg-gray-800 transform rotate-45 left-1/2 -translate-x-1/2 -mt-0.5">
-        </div>
-    </div>
-
-    <div class="w-4 h-4 rounded-full m-1 leading-4 ring-black ring-inset"
-        [ngClass]="{'bg-red-900':sectionName.includes('Platea'), 'bg-green-900':sectionName.includes('Super'), 'bg-blue-900':sectionName.includes('Pullman')}">
-
-    </div>
-</div>
+      class="w-4 h-4 rounded-full m-1 leading-4 ring-black ring-inset"
+      [ngClass]="{
+        'bg-red-900': sectionName.includes('Platea'),
+        'bg-green-900': sectionName.includes('Super'),
+        'bg-blue-900': sectionName.includes('Pullman'),
+      }"
+      (click)="modalAssign.openModal()"
+    ></div>
+  </div>
 }
-@if (currentFamilyCode && seat.familyCode && currentFamilyCode!==seat.familyCode) {
-<div class="relative group inline-block">
-    <div
-        class="shadow-gray-800 shadow-md absolute -top-12 left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2 z-10 w-24">
-        Ocupado
-        <div
-            class="shadow-gray-800 shadow-md tooltip-arrow absolute w-3 h-3 bg-gray-800 transform rotate-45 left-1/2 -translate-x-1/2 -mt-0.5">
-        </div>
+@if (userLookingAOcupiedSeat()) {
+  <div class="relative group inline-block">
+    <div [appTailwindClass]="'tooltip-24'">
+      Ocupado
+      <div [appTailwindClass]="'tooltip-arrow'"></div>
     </div>
-    <button (click)="seatOfOtherUser()" class="w-4 h-4 opacity-50 rounded-full m-1 leading-4 taken"
-        [ngClass]="{'bg-red-100':sectionName.includes('Platea'), 'bg-green-100':sectionName.includes('Super'), 'bg-blue-100':sectionName.includes('Pullman')}">
-        <svg class="icono-x" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <line x1="20" y1="4" x2="4" y2="20" stroke="red" stroke-width="4" />
-            <line x1="4" y1="4" x2="20" y2="20" stroke="red" stroke-width="4" />
-        </svg>
+    <button
+      (click)="seatOfOtherUser()"
+      class="w-4 h-4 opacity-50 rounded-full m-1 leading-4 taken"
+      [ngClass]="{
+        'bg-red-100': sectionName.includes('Platea'),
+        'bg-green-100': sectionName.includes('Super'),
+        'bg-blue-100': sectionName.includes('Pullman'),
+      }"
+    >
+      <svg
+        class="icono-x"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <line x1="20" y1="4" x2="4" y2="20" stroke="red" stroke-width="4" />
+        <line x1="4" y1="4" x2="20" y2="20" stroke="red" stroke-width="4" />
+      </svg>
     </button>
-</div>
+  </div>
 }
 
-@if (currentFamilyCode && seat.familyCode && currentFamilyCode===seat.familyCode) {
-<div class="relative group inline-block">
+@if (userLookingTheirOwnSeat()) {
+  <div class="relative group inline-block">
     <div
-        class="shadow-gray-800 shadow-md absolute -top-16 left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2 z-10 w-24">
-        {{'Fila ' + seat.row + ' \n Asiento ' + seat.seat}}
-        <div
-            class="shadow-gray-800 shadow-md tooltip-arrow absolute w-3 h-3 bg-gray-800 transform rotate-45 left-1/2 -translate-x-1/2 -mt-0.5">
-        </div>
+      class="shadow-gray-800 shadow-md absolute -top-16 left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2 z-10 w-24"
+    >
+      {{ 'Fila ' + seat.row + ' \n Asiento ' + seat.seat }}
+      <div [appTailwindClass]="'tooltip-arrow'"></div>
     </div>
-    <button (click)="seatAlreadyReservated()" class="w-4 h-4 opacity-50 rounded-full m-1 leading-4 taken"
-        [ngClass]="{'bg-red-100':sectionName.includes('Platea'), 'bg-green-100':sectionName.includes('Super'), 'bg-blue-100':sectionName.includes('Pullman')}">
-        <svg class="icono-check" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <!-- Línea diagonal hacia arriba -->
-            <line x1="4" y1="12" x2="10" y2="18" stroke="green" stroke-width="4" />
-            <!-- Línea diagonal hacia abajo -->
-            <line x1="10" y1="18" x2="20" y2="6" stroke="green" stroke-width="4" />
-        </svg>
+    <button
+      (click)="seatAlreadyReservated()"
+      class="w-4 h-4 opacity-50 rounded-full m-1 leading-4 taken"
+      [ngClass]="{
+        'bg-red-100': sectionName.includes('Platea'),
+        'bg-green-100': sectionName.includes('Super'),
+        'bg-blue-100': sectionName.includes('Pullman'),
+      }"
+    >
+      <svg
+        class="icono-check"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- Línea diagonal hacia arriba -->
+        <line x1="4" y1="12" x2="10" y2="18" stroke="green" stroke-width="4" />
+        <!-- Línea diagonal hacia abajo -->
+        <line x1="10" y1="18" x2="20" y2="6" stroke="green" stroke-width="4" />
+      </svg>
     </button>
-</div>
+  </div>
 }
 
-@if (currentFamilyCode && seat && seat.seat && seat.seat>0 && !seat.familyCode) {
-<div class="relative group inline-block">
+@if (userLookingAAvailableSeat()) {
+  <div class="relative group inline-block">
     <div
-        class="shadow-gray-800 shadow-md absolute -top-16 left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2 z-10 w-24">
-        {{(seat.enabled|| !preventa) ? 'Fila ' + seat.row + ' \n Asiento ' + seat.seat : 'Desde el 1/11'}}
-        <div
-            class="shadow-gray-800 shadow-md tooltip-arrow absolute w-3 h-3 bg-gray-800 transform rotate-45 left-1/2 -translate-x-1/2 -mt-0.5">
-        </div>
+      class="shadow-gray-800 shadow-md absolute -top-16 left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2 z-10 w-24"
+    >
+      {{
+        seat.enabled || !preventa
+          ? 'Fila ' + seat.row + ' \n Asiento ' + seat.seat
+          : 'Desde el 1/11'
+      }}
+      <div [appTailwindClass]="'tooltip-arrow'"></div>
     </div>
-    <button (click)="selectSeat(seat, sectionName)" [class.selected]="selected"
-        class="w-4 h-4 rounded-full m-1 leading-4 hover:ring-2 ring-black ring-inset"
-        [ngClass]="{'bg-red-900':(!preventa || seat.enabled) && sectionName.includes('Platea'), 'bg-green-900':(!preventa || seat.enabled) && sectionName.includes('Super'), 'bg-blue-900':(!preventa || seat.enabled) && sectionName.includes('Pullman'), 'bg-gray-700':preventa && !seat.enabled,'cursor-not-allowed':preventa && !seat.enabled, 'hover:ring-2': !preventa || seat.enabled}">
-        @if(selected && (seat.enabled || !preventa)){
-        <svg class="icono-check" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <!-- Línea diagonal hacia arriba -->
-            <line x1="4" y1="12" x2="10" y2="18" stroke="green" stroke-width="4" />
-            <!-- Línea diagonal hacia abajo -->
-            <line x1="10" y1="18" x2="20" y2="6" stroke="green" stroke-width="4" />
+    <button
+      (click)="selectSeat(seat, sectionName)"
+      [class.selected]="selected"
+      class="w-4 h-4 rounded-full m-1 leading-4 hover:ring-2 ring-black ring-inset"
+      [ngClass]="{
+        'bg-red-900':
+          (!preventa || seat.enabled) && sectionName.includes('Platea'),
+        'bg-green-900':
+          (!preventa || seat.enabled) && sectionName.includes('Super'),
+        'bg-blue-900':
+          (!preventa || seat.enabled) && sectionName.includes('Pullman'),
+        'bg-gray-700': preventa && !seat.enabled,
+        'cursor-not-allowed': preventa && !seat.enabled,
+        'hover:ring-2': !preventa || seat.enabled,
+      }"
+    >
+      @if (selected && (seat.enabled || !preventa)) {
+        <svg
+          class="icono-check"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- Línea diagonal hacia arriba -->
+          <line
+            x1="4"
+            y1="12"
+            x2="10"
+            y2="18"
+            stroke="green"
+            stroke-width="4"
+          />
+          <!-- Línea diagonal hacia abajo -->
+          <line
+            x1="10"
+            y1="18"
+            x2="20"
+            y2="6"
+            stroke="green"
+            stroke-width="4"
+          />
         </svg>
-        }
+      }
     </button>
-
-</div>
+  </div>
 }
-@if (seat.seat===0) {
-<button class="w-4 h-4 bg-transparent rounded-full m-1 leading-4">&nbsp;</button>
+@if (seat.seat === 0) {
+  <button class="w-4 h-4 bg-transparent rounded-full m-1 leading-4">
+    &nbsp;
+  </button>
 }
-@if (seat.seat===-1) {
-<button class="w-4 h-4 bg-transparent rounded-full m-1 leading-4">{{seat.row}}</button>
+@if (seat.seat === -1) {
+  <button class="w-4 h-4 bg-transparent rounded-full m-1 leading-4">
+    {{ seat.row }}
+  </button>
 }
+<app-modal-admin-seat-assign
+  #modalAssign
+  [seat]="seat"
+  [sectionName]="sectionName"
+></app-modal-admin-seat-assign>
+<app-modal-admin-seat-free
+  #modalFree
+  [seat]="seat"
+  [sectionName]="sectionName"
+></app-modal-admin-seat-free>

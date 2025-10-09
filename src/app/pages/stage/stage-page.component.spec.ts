@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { StagePageComponent } from './stage-page.component';
+import { StagePageComponent } from './stage-page.component'
 
 describe('StageComponent', () => {
-  let component: StagePageComponent;
-  let fixture: ComponentFixture<StagePageComponent>;
+  let component: StagePageComponent
+  let fixture: ComponentFixture<StagePageComponent>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StagePageComponent]
-    })
-    .compileComponents();
+      imports: [StagePageComponent],
+    }).compileComponents()
 
-    fixture = TestBed.createComponent(StagePageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(StagePageComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

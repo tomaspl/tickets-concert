@@ -1,37 +1,36 @@
 .circle {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin: 20px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 20px;
 }
 
 .red {
-    background-color: red;
+  background-color: red;
 }
 
 .blue {
-    background-color: blue;
+  background-color: blue;
 }
 
 .green {
-    background-color: green;
+  background-color: green;
 }
 
 button.selected {
-    outline: 2px solid #000;
-
+  outline: 2px solid #000;
 }
 
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /* 2 columnas, cada una con igual ancho */
-    grid-template-rows: repeat(2, auto);
-    /* Espacio entre los elementos de la cuadrícula */
-    width: 44px;
-    /* Ancho del contenedor */
-    height: 44px;
-    /* Alto del contenedor */
-    background-color: transparent;
-    /* Color de fondo del contenedor */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* 2 columnas, cada una con igual ancho */
+  grid-template-rows: repeat(2, auto);
+  /* Espacio entre los elementos de la cuadrícula */
+  width: 44px;
+  /* Ancho del contenedor */
+  height: 44px;
+  /* Alto del contenedor */
+  background-color: transparent;
+  /* Color de fondo del contenedor */
 }

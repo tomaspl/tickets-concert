@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import {
   getDatabase,
   ref,
@@ -11,245 +11,345 @@ import {
   remove,
   query,
   orderByChild,
-} from 'firebase/database';
-import app from '../../firebase';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { SectionStage } from '../model/SectionStage';
-import { sanitizeMap } from '../utils/map';
-import { Reservation } from '../model/Reservation';
-import { Seat } from '../model/Seat';
-import { PageType } from '../model/PageType';
-import { ActivatedRoute } from '@angular/router';
-import { ToasterService } from './toaster.service';
-import { messageTicketsPerFamily, seatsPerFamily } from '../constants';
-import { AppService } from './app.service';
+  serverTimestamp,
+} from 'firebase/database'
+import app from '../../firebase'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { SectionStage } from '../model/SectionStage'
+import { sanitizeMap } from '../utils/map'
+import { Reservation } from '../model/Reservation'
+import { Seat } from '../model/Seat'
+import { PageType } from '../model/PageType'
+import { ActivatedRoute } from '@angular/router'
+import { ToasterService } from './toaster.service'
+import { messageTicketsPerFamily, seatsPerFamily } from '../constants'
+import { AppService } from './app.service'
+import { familyData } from '../utils/familyData'
 
 @Injectable({
   providedIn: 'root',
 })
 export class FamilyService {
-  private rtdb = getDatabase(app);
-  private serverOffset = 0;
+  private queue: BehaviorSubject<any> = new BehaviorSubject<any>({})
+  public queue$: Observable<any> = this.queue.asObservable()
+  private rtdb = getDatabase(app)
+  private serverOffset = 0
+  private localSessionId: string | null = null
+  private localSessionAt: number | null = null
 
   private ticketStage: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
-  public ticketStage$: Observable<boolean> = this.ticketStage.asObservable();
+    false,
+  )
+  public ticketStage$: Observable<boolean> = this.ticketStage.asObservable()
   private peopleBeforeMe: BehaviorSubject<number> = new BehaviorSubject<number>(
-    0
-  );
+    0,
+  )
   public peopleBeforeMe$: Observable<number> =
-    this.peopleBeforeMe.asObservable();
+    this.peopleBeforeMe.asObservable()
   private stageMap: BehaviorSubject<SectionStage[]> = new BehaviorSubject<
     SectionStage[]
-  >([]);
-  public stageMap$: Observable<SectionStage[]> = this.stageMap.asObservable();
+  >([])
+  public stageMap$: Observable<SectionStage[]> = this.stageMap.asObservable()
 
-  private families: BehaviorSubject<any> = new BehaviorSubject<any>({});
-  public families$: Observable<any> = this.families.asObservable();
-
+  private families: BehaviorSubject<any> = new BehaviorSubject<any>({})
+  public families$: Observable<any> = this.families.asObservable()
 
   private availableSeats: BehaviorSubject<number> = new BehaviorSubject<number>(
-    0
-  );
+    0,
+  )
   public availableSeats$: Observable<number> =
-    this.availableSeats.asObservable();
+    this.availableSeats.asObservable()
 
-  public seatsPerFamily = seatsPerFamily;
-  public familyCode!: number;
+  public seatsPerFamily = seatsPerFamily
+  public familyCode!: number
 
-  private lastName: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  public lastName$: Observable<string> = this.lastName.asObservable();
+  private lastName: BehaviorSubject<string> = new BehaviorSubject<string>('')
+  public lastName$: Observable<string> = this.lastName.asObservable()
 
   private preventa: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
-  public preventa$: Observable<boolean> = this.preventa.asObservable();
+    false,
+  )
+  public preventa$: Observable<boolean> = this.preventa.asObservable()
 
-  private firstKey!: string;
-  public selectedSeats = new Set();
+  private firstKey!: string
+  public selectedSeats = new Set()
 
   private details: BehaviorSubject<Reservation[] | null> = new BehaviorSubject<
     Reservation[] | null
-  >(null);
+  >(null)
   public details$: Observable<Reservation[] | null> =
-    this.details.asObservable();
-  public familyId!: string;
+    this.details.asObservable()
+  public familyId!: string
   constructor(
     private route: ActivatedRoute,
     private toasterService: ToasterService,
     private appService: AppService,
   ) {
-    this.familyId = this.route.snapshot.paramMap.get('id') || '';
-    this.listenServerTimeOffset();
+    this.familyId = this.route.snapshot.paramMap.get('id') || ''
+    this.listenServerTimeOffset()
+  }
+
+  private isValidKey(key: string) {
+    if (!key) return false
+    // Realtime Database disallows these characters in keys: . # $ [ ] /
+    return !/[.#$\[\]\/]/.test(key)
   }
 
   /** Mantiene serverOffset usando .info/serverTimeOffset */
   listenServerTimeOffset() {
     try {
-      const offsetRef = ref(this.rtdb, '.info/serverTimeOffset');
+      const offsetRef = ref(this.rtdb, '.info/serverTimeOffset')
       onValue(
         offsetRef,
         (snap) => {
           if (snap.exists()) {
-            this.serverOffset = snap.val() || 0;
+            this.serverOffset = snap.val() || 0
           }
         },
-        { onlyOnce: false }
-      );
+        { onlyOnce: false },
+      )
     } catch (e) {
-      console.error('No se pudo leer serverTimeOffset', e);
+      console.error('No se pudo leer serverTimeOffset', e)
     }
   }
 
   getServerNow(): number {
-    return Date.now() + (this.serverOffset || 0);
+    return Date.now() + (this.serverOffset || 0)
   }
 
   getCurrentPage() {
-    return this.appService.currentPage$;
+    return this.appService.currentPage$
   }
 
   setFamilyId(id: string) {
-    this.familyId = id;
+    this.familyId = (id || '').trim()
+    if (!this.isValidKey(this.familyId)) {
+      console.warn('familyId inválido:', id)
+      this.familyId = ''
+      return
+    }
+    try {
+      const stored = localStorage.getItem(`session_${id}`)
+      if (stored) this.localSessionId = stored
+      const storedAt = localStorage.getItem(`sessionAt_${id}`)
+      if (storedAt) this.localSessionAt = Number(storedAt)
+    } catch (e) {
+      // ignore localStorage errors
+    }
   }
 
   listenIfTheatreIsOpen() {
-    const queueRef = ref(this.rtdb, `/theatreIsOpen/`);
+    const queueRef = ref(this.rtdb, `/theatreIsOpen/`)
     onValue(
       queueRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          this.appService.theatreIsOpen.next(snapshot.val());
+          this.appService.theatreIsOpen.next(snapshot.val())
         }
       },
       {
         onlyOnce: false, // Configurar para escuchar cambios en tiempo real
-      }
-    );
+      },
+    )
   }
 
   familyOnSchool(familyId: string) {
-    this.setFamilyId(familyId);
-    const familiesRef = ref(this.rtdb, 'families/' + familyId);
+    this.setFamilyId(familyId)
+    const familiesRef = ref(this.rtdb, 'families/' + familyId)
     return get(familiesRef)
       .then((snapshot: any) => {
         if (snapshot.exists()) {
-          this.availableSeats.next(snapshot.val().availableSeats);
-          this.familyCode = snapshot.val().familyCode;
-          this.lastName.next(snapshot.val().lastName);
-          this.preventa.next(snapshot.val().preventa);
-          return true;
+          this.availableSeats.next(snapshot.val().availableSeats)
+          this.familyCode = snapshot.val().familyCode
+          this.lastName.next(snapshot.val().lastName)
+          this.preventa.next(snapshot.val().preventa)
+          return true
         } else {
-          return false;
+          return false
         }
       })
       .catch((error) => {
-        return false;
-      });
+        return false
+      })
   }
 
   familyOnQueue(familyId: string) {
-    const queueRef = ref(this.rtdb, `queue/${familyId}`);
+    const queueRef = ref(this.rtdb, `queue/${familyId}`)
     return get(queueRef)
       .then((snapshot: any) => {
-        return snapshot.exists();
+        return snapshot.exists()
       })
       .catch(() => {
-        return false;
-      });
+        return false
+      })
   }
 
-  registerFamily() {
-    const connectedRef = ref(this.rtdb, '.info/connected');
+  registerFamily(): Promise<boolean> {
+    // Validar familyId antes de construir referencias en RTDB
+    if (!this.familyId || !this.isValidKey(this.familyId)) {
+      console.error('registerFamily: familyId inválido:', this.familyId)
+      try {
+        this.toasterService.showToaster('Identificador de familia inválido.')
+      } catch (e) {}
+      return Promise.resolve(false)
+    }
 
-    onValue(
-      connectedRef,
-      (snapshot) => {
-        if (snapshot.val() === false) {
-          return; 
+    // Generar sessionId y sessionAt inmediatamente y persistirlos localmente
+    // Asegurarse de que familyId esté trimmed y validado antes de usarlo en rutas
+    this.familyId = (this.familyId || '').trim()
+    if (!this.isValidKey(this.familyId)) {
+      console.error(
+        'registerFamily: familyId inválido después de trim:',
+        JSON.stringify(this.familyId),
+      )
+      try {
+        this.toasterService.showToaster('Identificador de familia inválido.')
+      } catch (e) {}
+      return Promise.resolve(false)
+    }
+
+    const sessionId = `${this.familyId}_${Math.random().toString(36).slice(2)}`
+    const sessionAt = this.getServerNow()
+    this.localSessionId = sessionId
+    this.localSessionAt = sessionAt
+    try {
+      localStorage.setItem(`session_${this.familyId}`, sessionId)
+      localStorage.setItem(`sessionAt_${this.familyId}`, String(sessionAt))
+    } catch (e) {
+      // ignore quota/localStorage errors
+    }
+
+    // Evitar dependencia de .info/connected (cuya lectura está dando "Invalid token in path").
+    // En su lugar, intentamos directamente operar sobre `/queue/{familyId}` y capturamos errores.
+    return Promise.resolve()
+      .then(() => {
+        console.log('registerFamily: familyId=', JSON.stringify(this.familyId))
+        let userStatusDatabaseRef: any
+        try {
+          userStatusDatabaseRef = ref(this.rtdb, `/queue/${this.familyId}`)
+        } catch (err) {
+          console.error(
+            'registerFamily: error creating ref for familyId=',
+            JSON.stringify(this.familyId),
+            err,
+          )
+          try {
+            this.toasterService.showToaster(
+              'Identificador de familia inválido.',
+            )
+          } catch (e) {}
+          return false
         }
-
-        // Cliente conectado; configurar acción onDisconnect
-        // Usar familyId como clave para evitar duplicados
-        const postData = { familyId: this.familyId, enteredAt: Date.now() };
-        const userStatusDatabaseRef = ref(this.rtdb, `/queue/${this.familyId}`);
-
-        // Actualizar o crear la entrada de la familia en la cola
-        update(userStatusDatabaseRef, postData)
-          .then(() => {
-            // Configura la eliminación en caso de desconexión
-            /*onDisconnect(userStatusDatabaseRef)
-              .remove()
-              .then(() => {
-              })
-              .catch((error) => {
-                console.error('Error al configurar onDisconnect:', error);
-              });*/
+        return get(userStatusDatabaseRef)
+          .then((snap: any) => {
+            // Si la familia ya está en stage y no expiró, no permitir nueva sesión
+            if (snap.exists()) {
+              const val = snap.val()
+              const onStageAt = val.onStageAt || null
+              if (onStageAt) {
+                const now = this.getServerNow()
+                const totalAllowed = 2 * 60 * 1000
+                if (now - onStageAt < totalAllowed) {
+                  this.toasterService.showToaster(
+                    'La familia ya está en stage en otro dispositivo.',
+                  )
+                  return false
+                }
+              }
+            }
+            let enteredAt = Date.now()
+            if (snap.exists()) {
+              const val = snap.val()
+              if (val.enteredAt) enteredAt = val.enteredAt
+            }
+            const postData: any = {
+              familyId: this.familyId,
+              enteredAt,
+              sessionId,
+              sessionAt,
+            }
+            return update(userStatusDatabaseRef, postData).then(() => true)
           })
-          .catch((error) => {
-            console.error('Error al actualizar la base de datos:', error);
-          });
-      },
-      {
-        onlyOnce: false, // Escuchar cambios en tiempo real
-      }
-    );
+          .catch((err) => {
+            console.error('Error leyendo/actualizando la cola:', err)
+            return false
+          })
+      })
+      .catch((err) => {
+        console.error('registerFamily unexpected error:', err)
+        return false
+      })
+  }
+
+  getLocalSessionId() {
+    return this.localSessionId
+  }
+
+  getLocalSessionAt() {
+    return this.localSessionAt
   }
 
   detectChangeOnQueue() {
-    const queueRef = ref(this.rtdb, `/queue/`);
-    const q = query(queueRef, orderByChild('enteredAt'));
+    const queueRef = ref(this.rtdb, `/queue/`)
+    const q = query(queueRef, orderByChild('enteredAt'))
     onValue(
       q,
       (snapshot) => {
         if (snapshot.exists()) {
-          const items: any[] = [];
+          const items: any[] = []
           snapshot.forEach((childSnapshot: any) => {
-            const val = childSnapshot.val();
-            items.push({ key: childSnapshot.key, ...val });
-          });
+            const val = childSnapshot.val()
+            items.push({ key: childSnapshot.key, ...val })
+          })
+          // Map to { [familyId]: { ...data } }
+          const queueObj: Record<string, any> = {}
+          items.forEach((item) => {
+            if (item.familyId) queueObj[item.familyId] = item
+          })
+          this.queue.next(queueObj)
           // items already ordered by enteredAt due to the query
-          const first = items[0];
-          const isItFirst = first && first.familyId === this.familyId;
+          const first = items[0]
+          const isItFirst = first && first.familyId === this.familyId
           // Si soy el primero y no tengo onStageAt, fijarlo ahora
           if (isItFirst && first && !first.onStageAt) {
-            const onStageRef = ref(this.rtdb, `/queue/${first.key}`);
+            const onStageRef = ref(this.rtdb, `/queue/${first.key}`)
             update(onStageRef, { onStageAt: Date.now() }).catch((err) => {
-              console.error('Error setting onStageAt:', err);
-            });
+              console.error('Error setting onStageAt:', err)
+            })
           }
           if (!isItFirst) {
-            const index = items.findIndex((it: any) => it.familyId === this.familyId);
-            this.peopleBeforeMe.next(index === -1 ? 0 : index);
+            const index = items.findIndex(
+              (it: any) => it.familyId === this.familyId,
+            )
+            this.peopleBeforeMe.next(index === -1 ? 0 : index)
           } else {
-            this.peopleBeforeMe.next(0);
+            this.peopleBeforeMe.next(0)
           }
-          this.ticketStage.next(isItFirst);
+          this.ticketStage.next(isItFirst)
         } else {
-          this.ticketStage.next(false);
-          this.peopleBeforeMe.next(0);
+          this.ticketStage.next(false)
+          this.peopleBeforeMe.next(0)
         }
       },
       {
         onlyOnce: false, // Configurar para escuchar cambios en tiempo real
-      }
-    );
+      },
+    )
   }
 
   /** Devuelve onStageAt si existe */
   getQueueOnStageAt(familyId?: string): Promise<number | null> {
-    const id = familyId || this.familyId;
-    if (!id) return Promise.resolve(null);
-    const entryRef = ref(this.rtdb, `queue/${id}`);
+    const id = familyId || this.familyId
+    if (!id) return Promise.resolve(null)
+    const entryRef = ref(this.rtdb, `queue/${id}`)
     return get(entryRef)
       .then((snapshot: any) => {
-        if (!snapshot.exists()) return null;
-        const val = snapshot.val();
-        if (val.onStageAt) return val.onStageAt;
-        return null;
+        if (!snapshot.exists()) return null
+        const val = snapshot.val()
+        if (val.onStageAt) return val.onStageAt
+        return null
       })
-      .catch(() => null);
+      .catch(() => null)
   }
 
   /**
@@ -257,28 +357,28 @@ export class FamilyService {
    * callback recibe el snapshot (como en onValue).
    */
   watchQueueEntry(callback: (snapshot: any) => void) {
-    const id = this.familyId;
-    if (!id) return () => {};
-    const nodeRef = ref(this.rtdb, `queue/${id}`);
-    const unsubscribe = onValue(nodeRef, (snap) => callback(snap));
-    return unsubscribe;
+    const id = this.familyId
+    if (!id) return () => {}
+    const nodeRef = ref(this.rtdb, `queue/${id}`)
+    const unsubscribe = onValue(nodeRef, (snap) => callback(snap))
+    return unsubscribe
   }
 
   removeFromSelectionDetail(sectionName: string, seat: Seat | null) {
-    if (!seat) return;
-    if (!this.details.value) return;
+    if (!seat) return
+    if (!this.details.value) return
     this.details.next(
       this.details.value.filter((item) => {
         return !(
           item.sectionName === sectionName &&
           item.seat === seat.seat &&
           item.row === seat.row
-        );
-      })
-    );
+        )
+      }),
+    )
   }
   addToSelectionDetail(sectionName: string, seat: Seat | null) {
-    if (!this.details.value) return;
+    if (!this.details.value) return
     if (seat) {
       this.details.next([
         ...this.details.value,
@@ -287,23 +387,23 @@ export class FamilyService {
           seat: seat.seat,
           row: seat.row,
         },
-      ]);
+      ])
     }
   }
 
   fetchStageMap(id?: string) {
-    const seatsRef = ref(this.rtdb, `/seats/`);
+    const seatsRef = ref(this.rtdb, `/seats/`)
 
     // Listener para cambios en la referencia /queue/
     onValue(
       seatsRef,
       (snapshot) => {
-        if (id) this.familyId = id;
+        if (id) this.familyId = id
         if (snapshot.exists()) {
-          const toJSON = snapshot.toJSON() as any;
-          const sanitizeMaptoJSON = sanitizeMap(toJSON);
-          this.stageMap.next(sanitizeMaptoJSON);
-          const details = [] as any;
+          const toJSON = snapshot.toJSON() as any
+          const sanitizeMaptoJSON = sanitizeMap(toJSON)
+          this.stageMap.next(sanitizeMaptoJSON)
+          const details = [] as any
           sanitizeMaptoJSON.forEach((stage) => {
             stage.seats?.forEach((row) => {
               row.forEach((seat) => {
@@ -312,30 +412,30 @@ export class FamilyService {
                     sectionName: stage.sectionName,
                     seat: seat.seat,
                     row: seat.row,
-                  });
+                  })
                 }
-              });
-            });
-          });
-          this.details.next(details);
-        } 
+              })
+            })
+          })
+          this.details.next(details)
+        }
       },
       {
         onlyOnce: false, // Configurar para escuchar cambios en tiempo real
-      }
-    );
+      },
+    )
   }
 
   downloadReport(filename: string, type: string) {
-    const seatsRef = ref(this.rtdb, `/`);
+    const seatsRef = ref(this.rtdb, `/`)
 
     onValue(
       seatsRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          const main = snapshot.val();
-          const sections = Object.keys(main.seats);
-          let data: any[] = [];
+          const main = snapshot.val()
+          const sections = Object.keys(main.seats)
+          let data: any[] = []
           sections.forEach((section) => {
             main.seats[section].forEach((seat: any) => {
               data.push({
@@ -344,54 +444,54 @@ export class FamilyService {
                 section,
                 row: seat.row ? seat.row : '',
                 seat: seat.seat,
-              });
-            });
-          });
+              })
+            })
+          })
           data = data
             .filter((elem) => elem.familyCode)
             .sort((a, b) => {
-              if (a.familyCode > b.familyCode) return 1;
-              if (a.familyCode < b.familyCode) return -1;
-              return 0;
-            });
+              if (a.familyCode > b.familyCode) return 1
+              if (a.familyCode < b.familyCode) return -1
+              return 0
+            })
 
-          const headers = 'Codigo de familia,Apellido,Seccion,Fila,Asiento';
+          const headers = 'Codigo de familia,Apellido,Seccion,Fila,Asiento'
           const rows = data.map(
             (row) =>
-              `${row.familyCode},${row.lastName},${row.section},${row.row},${row.seat}`
-          );
-          const csvContent = [headers, ...rows].join('\n');
-          const blob = new Blob([csvContent], { type });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          a.click();
-          window.URL.revokeObjectURL(url);
+              `${row.familyCode},${row.lastName},${row.section},${row.row},${row.seat}`,
+          )
+          const csvContent = [headers, ...rows].join('\n')
+          const blob = new Blob([csvContent], { type })
+          const url = window.URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = filename
+          a.click()
+          window.URL.revokeObjectURL(url)
         }
       },
       {
         onlyOnce: true, // Configurar para escuchar cambios en tiempo real
-      }
-    );
+      },
+    )
   }
 
   fetchFamilies() {
-    const seatsRef = ref(this.rtdb, `/families/`);
+    const seatsRef = ref(this.rtdb, `/families/`)
     // Listener para cambios en la referencia /queue/
     onValue(
       seatsRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          const toJSON = snapshot.toJSON() as any;
+          const toJSON = snapshot.toJSON() as any
           //const sanitizeMaptoJSON = sanitizeMap(toJSON);
-          this.families.next(toJSON);
-        } 
+          this.families.next(toJSON)
+        }
       },
       {
         onlyOnce: false, // Configurar para escuchar cambios en tiempo real
-      }
-    );
+      },
+    )
   }
 
   /**
@@ -399,111 +499,202 @@ export class FamilyService {
    * Si no existe devuelve null
    */
   getQueueEnteredAt(familyId?: string): Promise<number | null> {
-    const id = familyId || this.familyId;
-    if (!id) return Promise.resolve(null);
-    const entryRef = ref(this.rtdb, `queue/${id}`);
+    const id = familyId || this.familyId
+    if (!id) return Promise.resolve(null)
+    const entryRef = ref(this.rtdb, `queue/${id}`)
     return get(entryRef)
       .then((snapshot: any) => {
-        if (!snapshot.exists()) return null;
-        const val = snapshot.val();
+        if (!snapshot.exists()) return null
+        const val = snapshot.val()
         // El nodo puede ser { familyId, enteredAt } o { <familyId>: true, enteredAt }
-        if (val.enteredAt) return val.enteredAt;
-        const keys = Object.keys(val).filter((k) => k !== 'enteredAt');
-        return keys.length > 0 ? val.enteredAt || null : null;
+        if (val.enteredAt) return val.enteredAt
+        const keys = Object.keys(val).filter((k) => k !== 'enteredAt')
+        return keys.length > 0 ? val.enteredAt || null : null
       })
-      .catch(() => null);
+      .catch(() => null)
   }
 
   removeFromQueue() {
-    const userStatusDatabaseRef = ref(this.rtdb, `/queue/${this.familyId}`);
+    const userStatusDatabaseRef = ref(this.rtdb, `/queue/${this.familyId}`)
     remove(userStatusDatabaseRef)
       .then(() => {})
       .catch((error) => {
-        console.error('Error al eliminar la referencia:', error);
-      });
+        console.error('Error al eliminar la referencia:', error)
+      })
   }
 
   reservateSeats() {
-    const updates = {} as any;
+    const updates = {} as any
     updates['/families/' + this.familyId + '/availableSeats'] =
-      this.availableSeats.value;
+      this.availableSeats.value
     this.selectedSeats.forEach((seat: any) => {
       updates['/seats/' + seat.sectionName + '/' + seat.id + '/familyCode'] =
-        this.familyCode;
+        this.familyCode
       updates['/seats/' + seat.sectionName + '/' + seat.id + '/familyId'] =
-        this.familyId;
+        this.familyId
       updates['/seats/' + seat.sectionName + '/' + seat.id + '/lastName'] =
-        this.lastName.value;
-    });
-    this.appService.currentPage.next('thanks');
-    return update(ref(this.rtdb), updates);
+        this.lastName.value
+    })
+    this.appService.currentPage.next('thanks')
+    return update(ref(this.rtdb), updates)
   }
 
+  reservateIndividualSeatByAdmin(
+    sectionName: string,
+    seat: Seat,
+    familyCode: number | null,
+  ) {
+    if (!familyCode) return Promise.resolve()
 
+    const updates = {} as any
+    const family = familyData[familyCode]
+    const familiesRef = ref(this.rtdb, 'families/' + family.familyId)
+    return get(familiesRef)
+      .then((snapshot: any) => {
+        updates['/families/' + family.familyId + '/availableSeats'] =
+          snapshot.val().availableSeats - 1
+        updates['/seats/' + sectionName + '/' + seat.id + '/familyCode'] =
+          snapshot.val().familyCode
+        updates['/seats/' + sectionName + '/' + seat.id + '/familyId'] =
+          family.familyId
+        updates['/seats/' + sectionName + '/' + seat.id + '/lastName'] =
+          family.lastName
+        return update(ref(this.rtdb), updates)
+      })
+      .catch((error) => {
+        return false
+      })
+  }
 
+  reservateIndividualBoxByAdmin(
+    sectionName: string,
+    seat: Seat,
+    familyCode: number | null,
+  ) {
+    if (!familyCode) return Promise.resolve()
 
+    const updates = {} as any
+    const family = familyData[familyCode]
+    const familiesRef = ref(this.rtdb, 'families/' + family.familyId)
+    return get(familiesRef)
+      .then((snapshot: any) => {
+        updates['/families/' + family.familyId + '/availableSeats'] =
+          snapshot.val().availableSeats - 4
+        updates['/seats/' + sectionName + '/' + seat.id + '/familyCode'] =
+          snapshot.val().familyCode
+        updates['/seats/' + sectionName + '/' + seat.id + '/familyId'] =
+          family.familyId
+        updates['/seats/' + sectionName + '/' + seat.id + '/lastName'] =
+          family.lastName
+        return update(ref(this.rtdb), updates)
+      })
+      .catch((error) => {
+        return false
+      })
+  }
+
+  freeIndividualSeatByAdmin(sectionName: string, seat: Seat) {
+    const updates = {} as any
+    if (seat.familyId) {
+      const familiesRef = ref(this.rtdb, 'families/' + seat.familyId)
+      get(familiesRef)
+        .then((snapshot: any) => {
+          updates['/families/' + seat.familyId + '/availableSeats'] =
+            snapshot.val().availableSeats + 1
+          updates['/seats/' + sectionName + '/' + seat.id + '/familyCode'] =
+            null
+          updates['/seats/' + sectionName + '/' + seat.id + '/familyId'] = null
+          updates['/seats/' + sectionName + '/' + seat.id + '/lastName'] = null
+          return update(ref(this.rtdb), updates)
+        })
+        .catch((error) => {
+          return false
+        })
+    }
+    return Promise.resolve()
+  }
+
+  freeIndividualBoxByAdmin(sectionName: string, seat: Seat) {
+    const updates = {} as any
+    if (seat.familyId) {
+      const familiesRef = ref(this.rtdb, 'families/' + seat.familyId)
+      get(familiesRef)
+        .then((snapshot: any) => {
+          updates['/families/' + seat.familyId + '/availableSeats'] =
+            snapshot.val().availableSeats + 4
+          updates['/seats/' + sectionName + '/' + seat.id + '/familyCode'] =
+            null
+          updates['/seats/' + sectionName + '/' + seat.id + '/familyId'] = null
+          updates['/seats/' + sectionName + '/' + seat.id + '/lastName'] = null
+          return update(ref(this.rtdb), updates)
+        })
+        .catch((error) => {
+          return false
+        })
+    }
+    return Promise.resolve()
+  }
 
   selectSeat(seat: Seat | null, sectionName: string) {
     if (this.hasById(this.selectedSeats, seat?.id)) {
-      this.removeFromSelectionDetail(sectionName, seat);
-      this.deleteById(this.selectedSeats, seat?.id);
-      this.availableSeats.next(this.availableSeats.value + 1);
-      return false;
+      this.removeFromSelectionDetail(sectionName, seat)
+      this.deleteById(this.selectedSeats, seat?.id)
+      this.availableSeats.next(this.availableSeats.value + 1)
+      return false
     }
     if (
       !this.selectedSeats.has({ id: seat?.id, sectionName }) &&
       this.availableSeats.value > 0
     ) {
-      this.selectedSeats.add({ id: seat?.id, sectionName });
-      this.addToSelectionDetail(sectionName, seat);
-      this.availableSeats.next(this.availableSeats.value - 1);
-      return true;
+      this.selectedSeats.add({ id: seat?.id, sectionName })
+      this.addToSelectionDetail(sectionName, seat)
+      this.availableSeats.next(this.availableSeats.value - 1)
+      return true
     }
-    this.toasterService.showToaster(messageTicketsPerFamily);
+    this.toasterService.showToaster(messageTicketsPerFamily)
 
-    return false;
+    return false
   }
 
   selectBox(seat: Seat | null, sectionName: string) {
     if (this.hasById(this.selectedSeats, seat?.id)) {
-      this.removeFromSelectionDetail(sectionName, seat);
-      this.deleteById(this.selectedSeats, seat?.id);
-      this.availableSeats.next(this.availableSeats.value + 4);
-      return false;
+      this.removeFromSelectionDetail(sectionName, seat)
+      this.deleteById(this.selectedSeats, seat?.id)
+      this.availableSeats.next(this.availableSeats.value + 4)
+      return false
     }
     if (
       !this.selectedSeats.has({ id: seat?.id, sectionName }) &&
       this.availableSeats.value > 3
     ) {
-      this.selectedSeats.add({ id: seat?.id, sectionName });
-      this.addToSelectionDetail(sectionName, seat);
+      this.selectedSeats.add({ id: seat?.id, sectionName })
+      this.addToSelectionDetail(sectionName, seat)
 
-      this.availableSeats.next(this.availableSeats.value - 4);
-      return true;
+      this.availableSeats.next(this.availableSeats.value - 4)
+      return true
     }
-    this.toasterService.showToaster(messageTicketsPerFamily);
-    return false;
+    this.toasterService.showToaster(messageTicketsPerFamily)
+    return false
   }
 
   hasById(set: any, id: any) {
     for (let item of set) {
       if (item.id === id) {
-        return true;
+        return true
       }
     }
-    return false;
+    return false
   }
 
   deleteById(set: any, id: any) {
     for (let item of set) {
       if (item.id === id) {
-        set.delete(item);
-        return true;
+        set.delete(item)
+        return true
       }
     }
-    return false;
+    return false
   }
-
 
   /*openPreventa() {
     const userStatusDatabaseRef = ref(this.rtdb, `/seats/`);
@@ -514,6 +705,4 @@ export class FamilyService {
       );
     });
   }*/
-
-
 }

@@ -1,7 +1,10 @@
 <div class="row-auto">
-    @if(sectionName.includes('Palcos')){
-    <app-boxes-column [sectionName]="sectionName" [seatsRow]="seatsRow"></app-boxes-column>
-    } @else {
+  @if (sectionName.includes('Palcos')) {
+    <app-boxes-column
+      [sectionName]="sectionName"
+      [seatsRow]="seatsRow"
+    ></app-boxes-column>
+  } @else {
     <app-row [sectionName]="sectionName" [seats]="seatsRow"></app-row>
-    }
+  }
 </div>

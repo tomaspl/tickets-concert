@@ -1,141 +1,200 @@
 <div class="bg-[#fafafa] h-full">
-    <header class="absolute inset-x-0 top-0 z-50">
-        <nav class="flex items-center justify-center p-6 lg:px-8" aria-label="Global">
-            <div class="flex justify-center lg:flex-1">
-                <a href="#" class="-m-1.5 p-1.5">
-                    <span class="sr-only">Las Cumbres</span>
-                    <img class="h-24 w-auto" src="https://www.lascumbres.edu.ar/images/logo.png" alt="">
-                </a>
-            </div>
-        </nav>
-    </header>
+  <header class="absolute inset-x-0 top-0 z-50">
+    <nav
+      class="flex items-center justify-center p-6 lg:px-8"
+      aria-label="Global"
+    >
+      <div class="flex justify-center lg:flex-1">
+        <a href="#" class="-m-1.5 p-1.5">
+          <span class="sr-only">Las Cumbres</span>
+          <img
+            class="h-24 w-auto"
+            src="https://www.lascumbres.edu.ar/images/logo.png"
+            alt=""
+          />
+        </a>
+      </div>
+    </nav>
+  </header>
 
-    <div class="relative isolate px-6 pt-14 lg:px-8 h-full">
-        <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-            aria-hidden="true">
+  <div class="relative isolate px-6 pt-14 lg:px-8 h-full">
+    <div
+      class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+      aria-hidden="true"
+    ></div>
+    <div class="max-w-4xl mx-auto pt-24">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          Administración del Concert
+        </h1>
+        <div class="grid lg:grid-cols-1 lg:gap-4 items-center">
+          <div></div>
+          <div class="flex flex-wrap justify-center gap-4 my-4">
+            <button [appTailwindClass]="'btn-small-red'" (click)="resetApp()">
+              Reiniciar reservas
+            </button>
+            <button
+              [appTailwindClass]="'btn-small-red'"
+              (click)="downloadReport()"
+            >
+              Descargar reporte
+            </button>
+            <button [appTailwindClass]="'btn-small-red'" (click)="goToCola()">
+              Ver cola de espera
+            </button>
+            <ng-container *ngIf="families.length > 0">
+              <button
+                [appTailwindClass]="'btn-small-red'"
+                (click)="toggleMap()"
+              >
+                {{ showMap ? 'Ocultar mapa' : 'Ver mapa' }}
+              </button>
+            </ng-container>
+            <div
+              class="flex items-center justify-between ring-1 ring-inset ring-gray-300 rounded-lg my-2 lg:my-4 p-2 w-full max-w-xs"
+            >
+              <ng-container *ngIf="theatreIsOpen === false">
+                <span class="mr-2">Boleteria cerrada:</span>
+              </ng-container>
+              <ng-container *ngIf="theatreIsOpen === true">
+                <span class="mr-2">Boleteria abierta:</span>
+              </ng-container>
+              <ng-container *ngIf="theatreIsOpen !== null">
+                <input
+                  type="checkbox"
+                  id="toggle"
+                  [(ngModel)]="theatreIsOpen"
+                  (click)="toggleChange()"
+                  class="hidden"
+                />
+                <label
+                  for="toggle"
+                  [ngClass]="{
+                    'bg-green-400': theatreIsOpen,
+                    'bg-red-400': !theatreIsOpen,
+                    'cursor-pointer w-12 h-6 bg-gray-300 rounded-full flex items-center p-1 transition-colors duration-300': true,
+                  }"
+                >
+                  <span
+                    class="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300"
+                    [ngClass]="{
+                      'translate-x-6': theatreIsOpen === true,
+                      'translate-x-0': theatreIsOpen === false,
+                    }"
+                  ></span>
+                </label>
+              </ng-container>
+            </div>
+          </div>
         </div>
-        <div class="mx-auto max-w-16xl pt-24">
-            <div class="text-center">
-                <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Administración del Concert</h1>
-                <div class="grid lg:grid-cols-5 lg:gap-4">
-                    <div></div>
-                    <div>
+
+        <div class="grid lg:grid-cols-2 lg:gap-4">
+          @if (!showMap) {
+            <div class="flex items-center justify-start">
+              <label
+                for="price"
+                class="text-sm font-medium leading-6 text-gray-900"
+                >Filtrar por apellido:</label
+              >
+
+              <input
+                type="text"
+                (keyup)="keyUpHandler($event)"
+                name="price"
+                id="price"
+                class="block w-auto ml-2 rounded-md border-0 py-2 px-4 my-2 lg:my-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+            <div></div>
+            <div></div>
+            <div></div>
+          }
+        </div>
+
+        @if (showMap) {
+          <div class="mx-auto max-w-6xl mt-4 pt-4">
+            <app-map />
+          </div>
+        }
+
+        @if (!showMap) {
+          <div class="overflow-x-auto rounded-lg shadow">
+            <table class="min-w-full table-fixed bg-white">
+              <thead>
+                <tr>
+                  <th
+                    class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Código de Familia
+                  </th>
+                  <th
+                    class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Apellido
+                  </th>
+                  <th
+                    class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Preventa
+                  </th>
+                  <th
+                    class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (family of orderedFamilies; track family) {
+                  <tr class="animated-div odd:bg-gray-100" #rowElement>
+                    <td
+                      class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      {{ family.familyCode }}
+                    </td>
+                    <td
+                      class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      {{ family.lastName }}
+                    </td>
+                    <td
+                      class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      {{ family.preventa ? 'Si' : 'No' }}
+                    </td>
+                    <td
+                      class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      <div class="flex flex-wrap justify-center gap-2">
+                        <p class="hidden lg:block">
+                          {{ url + family.familyId }}
+                        </p>
                         <button
-                            class="bg-cumbres-red  text-white font-bold py-2 mr-2 px-4 rounded my-2 lg:my-4"
-                            (click)="resetApp()">Reiniciar
-                            reservas</button>
-                        <button class="bg-cumbres-red  text-white font-bold py-2 px-4 rounded my-2 lg:my-4"
-                            (click)="downloadReport()">Descargar reporte</button>
-                    </div>
-
-                    @if(families.length>0){
-                    <button class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded my-2 lg:my-4"
-                        (click)="toggleMap()">{{showMap?'Ocultar mapa':'Ver mapa'}}</button>
-                    }
-                    <div
-                        class="flex items-center justify-between ring-1 ring-inset ring-gray-300 rounded-lg my-2 lg:my-4 p-2">
-
-                        @if(theatreIsOpen===false){
-                        <span class="mr-2">Boleteria cerrada:</span>
-                        }
-                        @if(theatreIsOpen===true){
-                        <span class="mr-2">Boleteria abierta:</span>
-                        }
-                        @if(theatreIsOpen!==null){
-                        <input type="checkbox" id="toggle" [(ngModel)]="theatreIsOpen" (click)="toggleChange()"
-                            class="hidden" />
-                        <label for="toggle"
-                            [ngClass]="{'bg-green-400':theatreIsOpen,'bg-red-400':!theatreIsOpen, 'cursor-pointer w-12 h-6 bg-gray-300 rounded-full flex items-center p-1 transition-colors duration-300': true }">
-                            <span
-                                class="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300"
-                                [ngClass]="{'translate-x-6': theatreIsOpen===true, 'translate-x-0': theatreIsOpen===false}"></span>
-                        </label>
-                        }
-
-
-                    </div>
-
-                </div>
-                <div class="grid lg:grid-cols-4 lg:gap-4">
-                    @if(!showMap){
-
-                    <div class="flex items-center justify-start">
-                        <label for="price" class="text-sm font-medium leading-6 text-gray-900">Filtrar
-                            por
-                            apellido:</label>
-
-
-                        <input type="text" (keyup)="keyUpHandler($event)" name="price" id="price"
-                            class="block w-auto ml-2 rounded-md border-0 py-2 px-4 my-2 lg:my-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-
-
-                    }
-                </div>
-
-                @if(showMap){
-                <div class="mx-auto max-w-6xl mt-4 pt-4">
-
-                    <app-map />
-                </div>
+                          (click)="copyUrl(url + family.familyId, rowElement)"
+                          [appTailwindClass]="'btn-small-red'"
+                        >
+                          Copiar link
+                        </button>
+                        <button
+                          (click)="goTo(url + 'reserva/' + family.familyId)"
+                          target="_blank"
+                          [appTailwindClass]="'btn-small-red'"
+                        >
+                          Reservas
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 }
-
-                @if(!showMap){<table class="border-collapse table-fixed w-full text-sm">
-                    <thead>
-                        <tr>
-                            <th
-                                class="border-b text-center dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-800 dark:text-slate-600 text-left">
-                                Codigo de Familia</th>
-                            <th
-                                class="border-b text-center dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-800 dark:text-slate-600 text-left">
-                                Apellido</th>
-                            <th
-                                class="border-b text-center dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-800 dark:text-slate-600 text-left">
-                                Preventa</th>
-                            <!--th
-                                class="border-b text-center dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-800 dark:text-slate-600 text-left">
-                                Disponibles</th-->
-                            <th
-                                class="border-b text-center dark:border-slate-600 font-medium p-4 pr-8 pt-0 pb-3 text-slate-800 dark:text-slate-600 text-left">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (family of orderedFamilies; track family) {
-                        <tr class="animated-div" #rowElement>
-                            <td
-                                class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-800 dark:text-slate-600">
-                                {{family.familyCode}}</td>
-                            <td
-                                class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-800 dark:text-slate-600">
-                                {{family.lastName}}</td>
-                            <td
-                                class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-800 dark:text-slate-600">
-                                {{family.preventa ? 'Si':'No'}}</td>
-                            <!--td
-                                class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-800 dark:text-slate-600">
-                                {{family.availableSeats}}</td-->
-                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 grid xl:block xl:p-2">
-                                <p class="hidden lg:block">{{url+family.familyId}}</p>
-                                <button (click)="copyUrl(url+family.familyId, rowElement)"
-                                    class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded my-1 w-auto inline-block xl:my-2 xl:mr-2">Copiar
-                                    link</button>
-                                <button (click)="goTo(url+'reserva/'+family.familyId)" target="_blank"
-                                    class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded my-1 w-auto inline-block xl:my-2">Reservas</button>
-                            </td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-                }
-            </div>
-        </div>
-        <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-            aria-hidden="true">
-
-        </div>
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
     </div>
+    <div
+      class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+      aria-hidden="true"
+    ></div>
+  </div>
 </div>
