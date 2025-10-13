@@ -23,6 +23,9 @@ import { RouterModule } from '@angular/router'
   styleUrl: './admin.component.css',
 })
 export class AdminComponent implements OnInit {
+  goToLog() {
+    window.open('/admin/log', '_self')
+  }
   theatreIsOpen: boolean | null = null
   showMap = false
   preventa = preventaAvailable

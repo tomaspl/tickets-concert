@@ -1,0 +1,41 @@
+<div class="bg-[#fafafa] min-h-screen p-8">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6 text-cumbres-red">Log de eventos</h2>
+    <div class="overflow-x-auto rounded-lg shadow">
+      <table class="min-w-full bg-white">
+        <thead>
+          <tr>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              EVENTO
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              HORA
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              HACE
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let log of logList">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ log.titulo }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ getTime(log.time) }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ getTimeAgo(log.time) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

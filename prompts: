@@ -1,0 +1,80 @@
+prompts:
+Necesito generar almacenar en firebase una nueva estructura de datos bajo la key:'log'.
+
+Recordemos que los "seats" se tienen de la siguiente manera en la base de datos:
+
+```json
+  "seats": {
+    "1-Palcos Altos": [
+      {
+        "enabled": false,
+        "seat": 2
+      },
+      ...
+
+    ],
+    "2-Palcos Bajos": [
+      {
+        "enabled": false,
+        "seat": 1
+      },
+      {
+        "enabled": false,
+        "seat": 3
+      },
+      {
+        "enabled": false,
+        "seat": 5
+      },
+      ...
+    ],
+    "3-Platea Baja": [
+      {
+        "enabled": true,
+        "row": 1,
+        "seat": 21
+      },
+      {
+        "enabled": true,
+        "row": 1,
+        "seat": 19
+      },
+      {
+        "enabled": true,
+        "row": 1,
+        "seat": 17
+      },
+```
+
+y las familias de la siguiente manera:
+
+```json
+  "families": {
+    "-O75Fc_jOd0tOBrv6vBN": {
+      "availableSeats": 6,
+      "familyCode": 4023,
+      "lastName": "BRAVO",
+      "preventa": true
+    },
+    ...
+    }
+```
+
+En ella se tiene que generar un objeto del tipo:
+{
+time:<timestamp>,
+titulo:<evento>
+}
+
+Donde evento es un string diferente para cada tipo de accion que quisieramos loguear. Se van a loguear las siguientes acciones:
+
+- Cuando una familia concreta la adquisicion de entradas. Quiero que el titulo sea por ejemplo:
+  "Familia BRAVO ha adquirido Platea Baja: fila 1, asiento 21, Platea Baja: fila 1, asiento 23".
+- Cuando una familia pasa los 2 minutos y es expulsada por las Functions de firebase:
+  "Removida familia BRAVO. Pasa al mapa del teatro el siguiente en cola (si existía)."
+- Cuando una familia entra al mapa del teatro, o sea queda en el primer lugar de la cola:
+  "Familia BRAVO ingresa al mapa del teatro."
+- Cuando una familia se agrega a la cola:
+  "Familia BRAVO ingresa al sistema, va a la cola de espera"
+
+Estos objetos que se iran agregando bajo la key "log"de firebase. Tendran que mostrarse en admin/log y los mismos se podran listar como se lista la cola de espera pero en este caso se listan los eventos del log del mas reciente al mas antiguo.

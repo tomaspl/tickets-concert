@@ -89,6 +89,23 @@ export class FamilyService {
     this.listenServerTimeOffset()
   }
 
+  /**
+   * Agrega un evento al log en Firebase
+   * @param titulo string con el mensaje del evento
+   */
+  public addLogEvent(titulo: string) {
+    const logRef = ref(this.rtdb, '/log/')
+    const event = {
+      time: Date.now(),
+      titulo: titulo,
+    }
+    push(logRef, event)
+      .then(() => {})
+      .catch((err) => {
+        console.error('Error escribiendo en el log:', err)
+      })
+  }
+
   private isValidKey(key: string) {
     if (!key) return false
     // Realtime Database disallows these characters in keys: . # $ [ ] /
@@ -268,6 +285,10 @@ export class FamilyService {
               sessionId,
               sessionAt,
             }
+            // Loguear ingreso a la cola
+            this.addLogEvent(
+              `Familia ${this.lastName.value} ingresa al sistema, va a la cola de espera`,
+            )
             return update(userStatusDatabaseRef, postData).then(() => true)
           })
           .catch((err) => {
@@ -313,9 +334,16 @@ export class FamilyService {
           // Si soy el primero y no tengo onStageAt, fijarlo ahora
           if (isItFirst && first && !first.onStageAt) {
             const onStageRef = ref(this.rtdb, `/queue/${first.key}`)
-            update(onStageRef, { onStageAt: Date.now() }).catch((err) => {
-              console.error('Error setting onStageAt:', err)
-            })
+            update(onStageRef, { onStageAt: Date.now() })
+              .then(() => {
+                // Loguear ingreso al mapa del teatro
+                this.addLogEvent(
+                  `Familia ${this.lastName.value} ingresa al mapa del teatro.`,
+                )
+              })
+              .catch((err) => {
+                console.error('Error setting onStageAt:', err)
+              })
           }
           if (!isItFirst) {
             const index = items.findIndex(
@@ -527,6 +555,7 @@ export class FamilyService {
     const updates = {} as any
     updates['/families/' + this.familyId + '/availableSeats'] =
       this.availableSeats.value
+    const seatsAdquiridos: string[] = []
     this.selectedSeats.forEach((seat: any) => {
       updates['/seats/' + seat.sectionName + '/' + seat.id + '/familyCode'] =
         this.familyCode
@@ -534,7 +563,21 @@ export class FamilyService {
         this.familyId
       updates['/seats/' + seat.sectionName + '/' + seat.id + '/lastName'] =
         this.lastName.value
+      // Construir string de asiento adquirido
+      let desc = seat.sectionName.split('-')[1] + ': '
+      if (Boolean(seat.row) && Boolean(seat.seat)) {
+        desc += 'fila ' + seat.row + ', '
+        desc += 'asiento ' + seat.seat
+        seatsAdquiridos.push(desc)
+      } else {
+        desc += 'palco ' + seat.seat
+      }
     })
+    // Loguear adquisición de entradas
+    if (seatsAdquiridos.length > 0) {
+      const titulo = `Familia ${this.lastName.value} ha adquirido ${seatsAdquiridos.join(', ')}`
+      this.addLogEvent(titulo)
+    }
     this.appService.currentPage.next('thanks')
     return update(ref(this.rtdb), updates)
   }
@@ -646,7 +689,12 @@ export class FamilyService {
       !this.selectedSeats.has({ id: seat?.id, sectionName }) &&
       this.availableSeats.value > 0
     ) {
-      this.selectedSeats.add({ id: seat?.id, sectionName })
+      this.selectedSeats.add({
+        id: seat?.id,
+        sectionName,
+        row: seat?.row,
+        seat: seat?.seat,
+      })
       this.addToSelectionDetail(sectionName, seat)
       this.availableSeats.next(this.availableSeats.value - 1)
       return true
@@ -667,7 +715,12 @@ export class FamilyService {
       !this.selectedSeats.has({ id: seat?.id, sectionName }) &&
       this.availableSeats.value > 3
     ) {
-      this.selectedSeats.add({ id: seat?.id, sectionName })
+      this.selectedSeats.add({
+        id: seat?.id,
+        sectionName,
+        row: seat?.row,
+        seat: seat?.seat,
+      })
       this.addToSelectionDetail(sectionName, seat)
 
       this.availableSeats.next(this.availableSeats.value - 4)
@@ -695,6 +748,23 @@ export class FamilyService {
     }
     return false
   }
+
+  /**
+   * Agrega un evento al log en Firebase
+   * @param titulo string con el mensaje del evento
+   */
+  /*public addLogEvent(titulo: string) {
+    const logRef = ref(this.rtdb, '/log/')
+    const event = {
+      time: Date.now(),
+      titulo: titulo,
+    }
+    push(logRef, event)
+      .then(() => {})
+      .catch((err) => {
+        console.error('Error escribiendo en el log:', err)
+      })
+  }*/
 
   /*openPreventa() {
     const userStatusDatabaseRef = ref(this.rtdb, `/seats/`);

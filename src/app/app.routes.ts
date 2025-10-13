@@ -7,6 +7,7 @@ import { ReservationPageComponent } from './pages/reservation/reservation.compon
 import { ColaComponent } from './admin/cola/cola.component'
 import { MapaAdminComponent } from './admin/mapa/mapa.component'
 import { FamilyListComponent } from './admin/family-list/family-list.component'
+import { LogComponent } from './admin/log/log.component'
 
 export const routes: Routes = [
   {
@@ -24,6 +25,10 @@ export const routes: Routes = [
       {
         path: 'familias',
         component: FamilyListComponent,
+      },
+      {
+        path: 'log',
+        component: LogComponent,
       },
       {
         path: '**',
