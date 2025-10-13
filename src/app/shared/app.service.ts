@@ -88,6 +88,17 @@ export class AppService {
     update(userStatusDatabaseRef, familiesData).then(() => {})
   }
 
+  resetLog() {
+    const logDatabaseRef = ref(this.rtdb, `/log/`)
+
+    // Llamada a remove() con manejo de promesas
+    remove(logDatabaseRef)
+      .then(() => {})
+      .catch((error) => {
+        console.error('Error al eliminar la referencia:', error)
+      })
+  }
+
   resetStage() {
     const userStatusDatabaseRef = ref(this.rtdb, `/seats/`)
 

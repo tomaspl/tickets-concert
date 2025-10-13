@@ -41,17 +41,26 @@
             </button>
             <button
               [appTailwindClass]="'btn-small-red'"
-              (click)="goToFamilias()"
+              [routerLink]="'/admin/familias'"
             >
               Ver familias
             </button>
-            <button [appTailwindClass]="'btn-small-red'" (click)="goToCola()">
+            <button
+              [appTailwindClass]="'btn-small-red'"
+              [routerLink]="'/admin/cola'"
+            >
               Ver cola de espera
             </button>
-            <button [appTailwindClass]="'btn-small-red'" (click)="goToMap()">
+            <button
+              [appTailwindClass]="'btn-small-red'"
+              [routerLink]="'/admin/mapa'"
+            >
               Ver mapa
             </button>
-            <button [appTailwindClass]="'btn-small-red'" (click)="goToLog()">
+            <button
+              [appTailwindClass]="'btn-small-red'"
+              [routerLink]="'/admin/log'"
+            >
               Ver log de eventos
             </button>
             <div

@@ -1,5 +1,8 @@
 <div class="bg-[#fafafa] min-h-screen p-8">
   <div class="max-w-4xl mx-auto">
+    <button [appTailwindClass]="'btn-small-red'" (click)="resetCola()">
+      Resetear cola de esprea
+    </button>
     <div *ngIf="stageFamily" class="mb-8">
       <div
         class="rounded-lg shadow bg-white p-6 flex items-center justify-between"

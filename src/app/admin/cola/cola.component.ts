@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FamilyService } from '../../shared/family.service'
 import { Subscription, combineLatest, interval } from 'rxjs'
+import { AppService } from '../../shared/app.service'
+import { TailwindClassDirective } from '../../shared/directives/tailwind-class.directive'
 
 interface QueueFamily {
   familyId: string
@@ -14,7 +16,7 @@ interface QueueFamily {
 @Component({
   selector: 'app-cola',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TailwindClassDirective],
   templateUrl: './cola.component.html',
   styleUrl: './cola.component.css',
 })
@@ -26,7 +28,10 @@ export class ColaComponent implements OnInit, OnDestroy {
   now: number = Date.now()
   private sub?: Subscription
 
-  constructor(private familyService: FamilyService) {}
+  constructor(
+    private familyService: FamilyService,
+    private appService: AppService,
+  ) {}
 
   ngOnInit() {
     this.sub = combineLatest([
@@ -81,5 +86,9 @@ export class ColaComponent implements OnInit, OnDestroy {
   getTime(ts: number): string {
     const d = new Date(ts)
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  }
+
+  resetCola() {
+    this.appService.removeQueue()
   }
 }

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common'
 import { Subscription, interval } from 'rxjs'
 import { getDatabase, ref, onValue, DataSnapshot } from 'firebase/database'
 import app from '../../../firebase'
+import { AppService } from '../../shared/app.service'
+import { TailwindClassDirective } from '../../shared/directives/tailwind-class.directive'
 //import app from '../../firebase'
 
 interface LogEvent {
@@ -13,7 +15,7 @@ interface LogEvent {
 @Component({
   selector: 'app-log',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TailwindClassDirective],
   templateUrl: './log.component.html',
   styleUrl: './log.component.css',
 })
@@ -21,6 +23,8 @@ export class LogComponent implements OnInit, OnDestroy {
   logList: LogEvent[] = []
   now: number = Date.now()
   private sub?: Subscription
+
+  constructor(private appService: AppService) {}
 
   ngOnInit() {
     const db = getDatabase(app)
@@ -53,5 +57,9 @@ export class LogComponent implements OnInit, OnDestroy {
   getTime(ts: number): string {
     const d = new Date(ts)
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  }
+
+  resetLog() {
+    this.appService.resetLog()
   }
 }

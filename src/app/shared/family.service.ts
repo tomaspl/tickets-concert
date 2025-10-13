@@ -106,6 +106,10 @@ export class FamilyService {
       })
   }
 
+  logFamilyEnterToStage() {
+    this.addLogEvent(`Familia ${this.lastName} ingresa al mapa del teatro.`)
+  }
+
   private isValidKey(key: string) {
     if (!key) return false
     // Realtime Database disallows these characters in keys: . # $ [ ] /
