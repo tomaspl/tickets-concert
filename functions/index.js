@@ -59,15 +59,14 @@ exports.testScheduler = functions.pubsub
 
         // encontrar siguiente candidato para asignar onStageAt
         let nextIndex = stageIndex + 1
-        while (nextIndex < items.length) {
+        /*while (nextIndex < items.length) {
           const candidate = items[nextIndex]
-          // si el candidato ya tiene onStageAt (caso raro), saltarlo
           if (!candidate.onStageAt) {
             updates[`${candidate.key}/onStageAt`] = now
             break
           }
           nextIndex++
-        }
+        }*/
 
         await queueRef.update(updates)
         // Obtener apellido de la familia expulsada

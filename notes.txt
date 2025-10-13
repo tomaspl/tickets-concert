@@ -1,17 +1,13 @@
-error 1:
-- abro con safari y entro
-- abro desde desktop y me quedo en la cola esperando
-- bloqueo celu con safari
-- cuando lo desbloqueo y vuelvo a la web, habilita al que estaba en la cola asique ahora hay 2 simultaneamente reservando
+Explicacion de mejora en la logica de la cola.
 
-error 2 (aparentemente no es problema):
-- abro con safari y entro
-- abro desde desktop y me quedo en la cola esperando
-- bloqueo celu con safari
-- si pasan los 2 minutos el que deberia entrar que era el siguiente en la cola, se queda esperando indefinidamente. cola bloqueada
- - no se bloquea la cola pero el de safari puede convivir con el de desktop en el mapa del teatro incluso despues de haber refrescado
-error 3:
-- cola: desktop A - safari celu - desktop B
-- mientras "safari celu" espera, su celu se bloquea.
-- desktop A reserva asientos y termina. safari celu nunca aprovecha su momento y bloquea a desktop B
-
+Fecha de preventa (puede haber al menos 2 dias entre preventa y venta?)
+Fecha de venta
+Familias que tienen preventa?
+Sector para preventa?
+Mapa de teatro
+Mejora de la UX para ver la seleccion actual de asientos. Mejorar mediante textos/toaster?
+No se puede pausar cola y dejar a todos esperando.
+Los links son todos nuevos.
+Para una correcta visualizacion del mapa del teatro, no se puede ver desde un celu.
+Email pendiente
+ver fila de asiento

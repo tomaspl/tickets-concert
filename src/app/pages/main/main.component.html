@@ -29,39 +29,39 @@
     ></div>
     <div class="mx-auto max-w-6xl mt-14 pt-24">
       <div class="text-center">
-        <!--@if (isScreenSmall) {
-                <small-resolution-page />
-                }@else {-->
-        @if (currentPage === 'welcome') {
-          <welcome-page />
+        @if (isScreenSmall) {
+          <small-resolution-page />
+        } @else {
+          @if (currentPage === 'welcome') {
+            <welcome-page />
+          }
+          @if (currentPage === 'waiting') {
+            <waiting-room-page />
+          }
+          @if (currentPage === 'stage') {
+            <stage-page />
+          }
+          @if (currentPage === 'thanks') {
+            <thanks-page />
+          }
+          @if (currentPage === 'expired-time') {
+            <expired-time-page />
+          }
+          @if (currentPage === 'error') {
+            <error-page />
+          }
+          @if (currentPage === 'finishedSession') {
+            <error-page />
+          }
+          @if (currentPage === 'loading') {
+            <div class="p-4 max-w-sm w-full mx-auto flex justify-center">
+              <svg
+                class="animate-spin h-5 w-5 bg-cumbres-red"
+                viewBox="0 0 24 24"
+              ></svg>
+            </div>
+          }
         }
-        @if (currentPage === 'waiting') {
-          <waiting-room-page />
-        }
-        @if (currentPage === 'stage') {
-          <stage-page />
-        }
-        @if (currentPage === 'thanks') {
-          <thanks-page />
-        }
-        @if (currentPage === 'expired-time') {
-          <expired-time-page />
-        }
-        @if (currentPage === 'error') {
-          <error-page />
-        }
-        @if (currentPage === 'finishedSession') {
-          <error-page />
-        }
-        @if (currentPage === 'loading') {
-          <div class="p-4 max-w-sm w-full mx-auto flex justify-center">
-            <svg
-              class="animate-spin h-5 w-5 bg-cumbres-red"
-              viewBox="0 0 24 24"
-            ></svg>
-          </div>
-        }
-        <!--}-->
       </div>
     </div>
     <div

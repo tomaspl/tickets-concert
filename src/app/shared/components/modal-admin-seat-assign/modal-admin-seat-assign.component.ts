@@ -5,6 +5,7 @@ import {
   Output,
   OnInit,
   computed,
+  signal,
 } from '@angular/core'
 import { Seat } from '../../../model/Seat'
 import { FormsModule } from '@angular/forms'
@@ -23,7 +24,7 @@ export class ModalAdminSeatAssignComponent implements OnInit {
   isOpen: boolean = false
   @Input() seat!: Seat
   @Input() sectionName!: string
-
+  errorOnAssign = signal<boolean>(false)
   // Propiedad interna que enlazará con ngModel
   internalFamilyCode: number | null = null
 
@@ -54,37 +55,46 @@ export class ModalAdminSeatAssignComponent implements OnInit {
   }
 
   blockSeat() {
-    if (this.seat.row) {
-      this.familyService.reservateIndividualSeatByAdmin(
-        this.sectionName,
-        this.seat,
-        99999, // Código especial para bloquear asiento
-      )
-    } else {
-      this.familyService.reservateIndividualBoxByAdmin(
-        this.sectionName,
-        this.seat,
-        99999, // Código especial para bloquear asiento
-      )
+    try {
+      if (this.seat.row) {
+        this.familyService.reservateIndividualSeatByAdmin(
+          this.sectionName,
+          this.seat,
+          99999, // Código especial para bloquear asiento
+        )
+      } else {
+        this.familyService.reservateIndividualBoxByAdmin(
+          this.sectionName,
+          this.seat,
+          99999, // Código especial para bloquear asiento
+        )
+      }
+      this.closeModal()
+    } catch (error) {
+      this.errorOnAssign.set(true)
     }
-    this.closeModal()
   }
 
   assignSeat() {
-    if (this.seat.row) {
-      this.familyService.reservateIndividualSeatByAdmin(
-        this.sectionName,
-        this.seat,
-        this.internalFamilyCode,
-      )
-    } else {
-      this.familyService.reservateIndividualBoxByAdmin(
-        this.sectionName,
-        this.seat,
-        this.internalFamilyCode,
-      )
+    try {
+      if (this.seat.row) {
+        this.familyService.reservateIndividualSeatByAdmin(
+          this.sectionName,
+          this.seat,
+          this.internalFamilyCode,
+        )
+      } else {
+        this.familyService.reservateIndividualBoxByAdmin(
+          this.sectionName,
+          this.seat,
+          this.internalFamilyCode,
+        )
+      }
+      this.closeModal()
+    } catch (error) {
+      console.log('error', error)
+      this.errorOnAssign.set(true)
     }
-    this.closeModal()
   }
 
   freeSeat() {

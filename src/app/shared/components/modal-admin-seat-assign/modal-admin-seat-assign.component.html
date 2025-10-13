@@ -26,6 +26,7 @@
           placeholder="Ingrese valor"
           class="border p-2 rounded w-full mt-2"
           [(ngModel)]="internalFamilyCode"
+          (keyup)="errorOnAssign.set(false)"
         />
         <div class="flex justify-center mt-4">
           <button
@@ -36,6 +37,9 @@
             Asignar
           </button>
         </div>
+        @if (errorOnAssign()) {
+          <p style="color: red; font-size: 14px">Error en asignacion</p>
+        }
       </div>
       <hr class="my-4 border-t border-gray-300" />
 
