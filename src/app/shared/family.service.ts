@@ -25,6 +25,7 @@ import { ToasterService } from './toaster.service'
 import { messageTicketsPerFamily, seatsPerFamily } from '../constants'
 import { AppService } from './app.service'
 import { familyData } from '../utils/familyData'
+import { HttpClient } from '@angular/common/http'
 
 @Injectable({
   providedIn: 'root',
@@ -84,6 +85,7 @@ export class FamilyService {
     private route: ActivatedRoute,
     private toasterService: ToasterService,
     private appService: AppService,
+    private http: HttpClient,
   ) {
     this.familyId = this.route.snapshot.paramMap.get('id') || ''
     this.listenServerTimeOffset()
@@ -335,8 +337,11 @@ export class FamilyService {
           // items already ordered by enteredAt due to the query
           const first = items[0]
           const isItFirst = first && first.familyId === this.familyId
+          console.log('first.familyId', first.familyId)
+          console.log('this.familyId', this.familyId)
           // Si soy el primero y no tengo onStageAt, fijarlo ahora
           if (isItFirst && first && !first.onStageAt) {
+            console.log('soy el primero, seteo onStageAt')
             const onStageRef = ref(this.rtdb, `/queue/${first.key}`)
             update(onStageRef, { onStageAt: Date.now() })
               .then(() => {
@@ -779,4 +784,14 @@ export class FamilyService {
       );
     });
   }*/
+
+  uploadAllFamilies() {
+    this.http
+      .get<{ lastName: string; familyCode: string }[]>('assets/output.json')
+      .subscribe((dataArray) => {
+        const dbRef = ref(this.rtdb, 'families')
+        dataArray.forEach((item) => push(dbRef, item))
+        console.log('✅ Datos subidos desde Angular')
+      })
+  }
 }

@@ -8,6 +8,7 @@ import { MapComponent } from '../theater/map/map.component'
 import { preventaAvailable } from '../constants'
 import { TailwindClassDirective } from '../shared/directives/tailwind-class.directive'
 import { RouterModule } from '@angular/router'
+import { HttpClientModule } from '@angular/common/http'
 
 @Component({
   selector: 'app-admin',
@@ -18,6 +19,7 @@ import { RouterModule } from '@angular/router'
     MapComponent,
     TailwindClassDirective,
     RouterModule,
+    HttpClientModule,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
@@ -52,5 +54,9 @@ export class AdminComponent implements OnInit {
 
   downloadReport() {
     this.familyService.downloadReport('reporte.csv', 'text/plain')
+  }
+
+  uploadNewFamilies() {
+    this.familyService.uploadAllFamilies()
   }
 }
