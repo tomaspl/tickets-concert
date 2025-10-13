@@ -22,7 +22,7 @@
       class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
       aria-hidden="true"
     ></div>
-    <div class="max-w-4xl mx-auto pt-24">
+    <div class="max-w-6xl mx-auto pt-24">
       <div class="text-center">
         <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
           Administración del Concert
@@ -39,17 +39,18 @@
             >
               Descargar reporte
             </button>
+            <button
+              [appTailwindClass]="'btn-small-red'"
+              (click)="goToFamilias()"
+            >
+              Ver familias
+            </button>
             <button [appTailwindClass]="'btn-small-red'" (click)="goToCola()">
               Ver cola de espera
             </button>
-            <ng-container *ngIf="families.length > 0">
-              <button
-                [appTailwindClass]="'btn-small-red'"
-                (click)="toggleMap()"
-              >
-                {{ showMap ? 'Ocultar mapa' : 'Ver mapa' }}
-              </button>
-            </ng-container>
+            <button [appTailwindClass]="'btn-small-red'" (click)="goToMap()">
+              Ver mapa
+            </button>
             <div
               class="flex items-center justify-between ring-1 ring-inset ring-gray-300 rounded-lg my-2 lg:my-4 p-2 w-full max-w-xs"
             >
@@ -87,16 +88,21 @@
             </div>
           </div>
         </div>
+        <router-outlet />
+        <!--@if (showMap) {
+          <div class="mx-auto max-w-6xl mt-4 pt-4">
+            <app-map />
+          </div>
+        }
 
-        <div class="grid lg:grid-cols-2 lg:gap-4">
-          @if (!showMap) {
+        @if (!showMap) {
+          <div class="grid lg:grid-cols-2 lg:gap-4">
             <div class="flex items-center justify-start">
               <label
                 for="price"
                 class="text-sm font-medium leading-6 text-gray-900"
                 >Filtrar por apellido:</label
               >
-
               <input
                 type="text"
                 (keyup)="keyUpHandler($event)"
@@ -108,16 +114,7 @@
             <div></div>
             <div></div>
             <div></div>
-          }
-        </div>
-
-        @if (showMap) {
-          <div class="mx-auto max-w-6xl mt-4 pt-4">
-            <app-map />
           </div>
-        }
-
-        @if (!showMap) {
           <div class="overflow-x-auto rounded-lg shadow">
             <table class="min-w-full table-fixed bg-white">
               <thead>
@@ -189,7 +186,7 @@
               </tbody>
             </table>
           </div>
-        }
+        }-->
       </div>
     </div>
     <div
