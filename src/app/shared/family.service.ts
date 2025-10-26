@@ -248,7 +248,6 @@ export class FamilyService {
     // Intentar operar directamente sobre `/queue/{familyId}` y capturar errores
     return Promise.resolve()
       .then(() => {
-        console.log('registerFamily: familyId=', JSON.stringify(this.familyId))
         let userStatusDatabaseRef: any
         try {
           userStatusDatabaseRef = ref(this.rtdb, `/queue/${this.familyId}`)
@@ -302,7 +301,6 @@ export class FamilyService {
               sessionId,
               sessionAt,
             }
-            console.log('log!!!', this.lastName.value)
             // Loguear ingreso a la cola
             this.addLogEvent(
               `Familia ${this.lastName.value} ingresa al sistema, va a la cola de espera`,
@@ -351,14 +349,7 @@ export class FamilyService {
           // items already ordered by enteredAt due to the query
           const first = items[0]
           const isItFirst = first && first.familyId === this.familyId
-          console.log('first', first)
-          console.log('this.familyId', this.familyId)
-          // Si soy el primero y no tengo onStageAt, fijarlo ahora
-          console.log('isItFirst', isItFirst)
-          console.log('first', first)
-          console.log('onStageAt', !first.onStageAt)
           if (isItFirst && first && !first.onStageAt) {
-            console.log('soy el primero, seteo onStageAt')
             const onStageRef = ref(this.rtdb, `/queue/${first.key}`)
             update(onStageRef, { onStageAt: Date.now() })
               .then(() => {
@@ -631,7 +622,6 @@ export class FamilyService {
         return update(ref(this.rtdb), updates)
       })
       .catch((error) => {
-        console.log('error-2', error)
         return false
       })
   }
@@ -659,7 +649,6 @@ export class FamilyService {
         return update(ref(this.rtdb), updates)
       })
       .catch((error) => {
-        console.log('error -1', error)
         return false
       })
   }

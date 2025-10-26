@@ -7,6 +7,17 @@
       'opacity-0': !toaster.visible,
     }"
   >
-    {{ toaster.message }}
+    <span [innerHTML]="toaster.message | br"></span>
+  </div>
+  <div
+    *ngFor="let toaster of toastersSeats"
+    class="bg-red-500 text-white p-4 rounded shadow-lg transform transition-transform duration-300 ease-in-out"
+    [ngClass]="{
+      'animate-drop': toaster.visible,
+      'opacity-0': !toaster.visible,
+    }"
+  >
+    Reservas:<br />
+    <span [innerHTML]="toaster.message | br"></span>
   </div>
 </div>

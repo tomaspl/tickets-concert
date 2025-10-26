@@ -52,8 +52,6 @@ export class MainPageComponent implements OnInit {
     this.familyService.fetchStageMap()
 
     this.appService.theatreIsOpen.pipe(take(1)).subscribe((response) => {
-      console.log('theatreIsOpen', response)
-
       if (response === false) {
         this.appService.setError('La boleteria se encuentra cerrada')
         this.appService.changePage('error')

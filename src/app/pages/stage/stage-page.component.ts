@@ -18,6 +18,7 @@ import { ToasterComponent } from '../../shared/components/toaster.component'
 import { MapComponent } from '../../theater/map/map.component'
 import { AppService } from '../../shared/app.service'
 import { TailwindClassDirective } from '../../shared/directives/tailwind-class.directive'
+import { ToasterService } from '../../shared/toaster.service'
 
 @Component({
   selector: 'stage-page',
@@ -42,6 +43,8 @@ export class StagePageComponent implements OnInit {
   public availableSeats!: number
   public reservedSeats!: number
   public details$: Observable<Reservation[] | null>
+  private lastShownCount = 0
+  private toasterTimeouts: any[] = []
 
   public timeRemaining!: number
   public countdownSubscription!: Subscription
@@ -52,6 +55,7 @@ export class StagePageComponent implements OnInit {
   constructor(
     private familyService: FamilyService,
     private appService: AppService,
+    private toasterService: ToasterService,
   ) {
     this.familyService.stageMap$.subscribe((response) => {
       if (response) {
@@ -70,6 +74,39 @@ export class StagePageComponent implements OnInit {
       // (6 - 7) = se reservaron 2
     })
     this.details$ = this.familyService.details$
+    /*this.details$.subscribe((res) => {
+      if (!res) {
+        this.lastShownCount = 0
+        return
+      }
+
+      const newCount = res.length
+      if (newCount <= this.lastShownCount) {
+        return
+      }
+
+      const newItems = res.slice(this.lastShownCount)
+      let delay = 0
+      newItems.forEach((reservation) => {
+        const timeoutId = setTimeout(() => {
+          this.toasterService.showToaster(
+            `Reserva: Sección ${reservation.sectionName}, Fila ${reservation.row}, Asiento ${reservation.seat}`,
+          )
+        }, delay)
+        this.toasterTimeouts.push(timeoutId)
+        delay += 500 // 500ms entre cada notificación
+      })
+
+      this.lastShownCount = newCount
+    })*/
+
+    this.details$.subscribe((res) => {
+      let message = ''
+      res?.forEach((reservation) => {
+        message += `${reservation.sectionName.split('-')[1]}, Fila ${reservation.row}, Asiento ${reservation.seat}\n`
+      })
+      this.toasterService.showToasterSeats(message)
+    })
   }
 
   ngOnInit() {
@@ -197,6 +234,13 @@ export class StagePageComponent implements OnInit {
   ngOnDestroy() {
     if (this.countdownSubscription) this.countdownSubscription.unsubscribe()
     if (this.queueUnsubscribe) this.queueUnsubscribe()
+
+    // Limpiar timeouts de toasters pendientes
+    if (this.toasterTimeouts && this.toasterTimeouts.length) {
+      this.toasterTimeouts.forEach((id) => clearTimeout(id))
+      this.toasterTimeouts = []
+    }
+
     document.removeEventListener(
       'visibilitychange',
       this.handleVisibilityChange,

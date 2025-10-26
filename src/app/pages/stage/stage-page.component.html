@@ -21,13 +21,13 @@
         <!--Asientos Disponibles: {{availableSeats}}<br>Asientos Reservados: {{reservedSeats}}-->
       </span>
       <div class="bg-transparent">
-        <button
+        <!--button
           (click)="toggleDetails()"
           [ngClass]="{ disabled: reservedSeats === 0 }"
           class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2"
         >
           {{ showDetails ? 'Ocultar detalles' : 'Ver detalles' }}
-        </button>
+        </button-->
         <button
           (click)="reserveSeats()"
           [ngClass]="{ disabled: reservedSeats === 0 }"

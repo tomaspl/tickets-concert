@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core'
 import { ToasterService } from '../toaster.service'
 import { CommonModule } from '@angular/common'
+import { BrPipe } from '../pipes/br.pipe'
 
 @Component({
   selector: 'app-toaster',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BrPipe],
   templateUrl: './toaster.component.html',
   styleUrl: './toaster.component.css',
 })
 export class ToasterComponent implements OnInit {
   toasters: { message: string; visible: boolean }[] = []
+  toastersSeats: { message: string; visible: boolean }[] = []
 
   constructor(private toasterService: ToasterService) {}
 
@@ -23,6 +25,16 @@ export class ToasterComponent implements OnInit {
       setTimeout(() => {
         this.toasters = this.toasters.filter((t) => t !== toaster) // Remove toaster after fade out
       }, 2500) // Extra 500ms for fade out effect
+    })
+
+    this.toasterService.toastersSeats$.subscribe((message) => {
+      if (message === '') return
+      const toaster = { message, visible: true }
+      this.toastersSeats = [toaster]
+      /*setTimeout(() => (toaster.visible = false), 2000) // Fade out after 2 seconds
+      setTimeout(() => {
+        this.toasters = this.toasters.filter((t) => t !== toaster) // Remove toaster after fade out
+      }, 2500) // Extra 500ms for fade out effect*/
     })
   }
 }
