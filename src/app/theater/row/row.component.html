@@ -1,4 +1,11 @@
-<div>
+<div
+  style="
+    display: grid;
+    grid-auto-flow: column;
+    align-items: flex-start;
+    justify-content: center;
+  "
+>
   @for (seat of seats; track seat) {
     <app-seat [sectionName]="sectionName" [seat]="seat"></app-seat>
   }
