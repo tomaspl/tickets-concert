@@ -28,7 +28,10 @@ export class ToasterComponent implements OnInit {
     })
 
     this.toasterService.toastersSeats$.subscribe((message) => {
-      if (message === '') return
+      if (message === '') {
+        this.toastersSeats = []
+        return
+      }
       const toaster = { message, visible: true }
       this.toastersSeats = [toaster]
       /*setTimeout(() => (toaster.visible = false), 2000) // Fade out after 2 seconds
