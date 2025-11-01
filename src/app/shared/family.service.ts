@@ -37,6 +37,8 @@ export class FamilyService {
   private serverOffset = 0
   private localSessionId: string | null = null
   private localSessionAt: number | null = null
+  // Unsubscribe function for the current families/{familyId} listener
+  private familyRefUnsubscribe: (() => void) | null = null
 
   private ticketStage: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false,
@@ -145,6 +147,16 @@ export class FamilyService {
   }
 
   setFamilyId(id: string) {
+    // detach previous listener if any
+    if (this.familyRefUnsubscribe) {
+      try {
+        this.familyRefUnsubscribe()
+      } catch (e) {
+        // ignore
+      }
+      this.familyRefUnsubscribe = null
+    }
+
     this.familyId = (id || '').trim()
     if (!this.isValidKey(this.familyId)) {
       console.warn('familyId inválido:', id)
@@ -182,10 +194,17 @@ export class FamilyService {
     return get(familiesRef)
       .then((snapshot: any) => {
         if (snapshot.exists()) {
-          this.availableSeats.next(snapshot.val().availableSeats)
-          this.familyCode = snapshot.val().familyCode
-          this.lastName.next(snapshot.val().lastName)
-          this.preventa.next(snapshot.val().preventa)
+          const val = snapshot.val()
+          this.availableSeats.next(val.availableSeats)
+          this.familyCode = val.familyCode
+          this.lastName.next(val.lastName)
+          this.preventa.next(val.preventa)
+          // Attach a realtime listener so the values update on any change
+          try {
+            this.familyRefUnsubscribe = this.watchFamily(familyId)
+          } catch (e) {
+            // ignore listener attach errors
+          }
           return true
         } else {
           return false
@@ -194,6 +213,53 @@ export class FamilyService {
       .catch((error) => {
         return false
       })
+  }
+
+  /**
+   * Start listening in realtime to `/families/{familyId}`. Returns the unsubscribe function.
+   * If called when another family listener is active, the previous listener will be detached first.
+   */
+  watchFamily(familyId?: string): () => void {
+    const id = familyId || this.familyId
+    if (!id) return () => {}
+
+    // detach previous listener if present
+    if (this.familyRefUnsubscribe) {
+      try {
+        this.familyRefUnsubscribe()
+      } catch (e) {}
+      this.familyRefUnsubscribe = null
+    }
+
+    const familyRef = ref(this.rtdb, 'families/' + id)
+    const unsubscribe = onValue(
+      familyRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const val = snapshot.val()
+          if (val.availableSeats !== undefined)
+            this.availableSeats.next(val.availableSeats)
+          if (val.familyCode !== undefined) this.familyCode = val.familyCode
+          if (val.lastName !== undefined) this.lastName.next(val.lastName)
+          if (val.preventa !== undefined) this.preventa.next(val.preventa)
+        }
+      },
+      { onlyOnce: false },
+    )
+
+    // store and return
+    this.familyRefUnsubscribe = unsubscribe
+    return unsubscribe
+  }
+
+  /** Detach the current families/{familyId} listener if present */
+  unwatchFamily() {
+    if (this.familyRefUnsubscribe) {
+      try {
+        this.familyRefUnsubscribe()
+      } catch (e) {}
+      this.familyRefUnsubscribe = null
+    }
   }
 
   familyOnQueue(familyId: string) {
