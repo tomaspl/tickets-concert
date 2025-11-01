@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { FamilyService } from '../../shared/family.service'
 import { AppService } from '../../shared/app.service'
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'waiting-room-page',
@@ -13,6 +14,7 @@ export class WaitingRoomPageComponent implements OnInit {
   public amountOfPeople = 0
   private queueUnsubscribe: any
   private invalidated = false
+  private waitingSub!: Subscription
   constructor(
     private familyService: FamilyService,
     private appService: AppService,
@@ -49,7 +51,7 @@ export class WaitingRoomPageComponent implements OnInit {
       this.amountOfPeople = response
     })
 
-    this.familyService.ticketStage$.subscribe((response) => {
+    this.waitingSub = this.familyService.ticketStage$.subscribe((response) => {
       // Only navigate to stage if we are not invalidated locally
       if (response && !this.invalidated) {
         this.appService.changePage('stage')
@@ -85,6 +87,7 @@ export class WaitingRoomPageComponent implements OnInit {
               JSON.stringify({ sessionAt: dbAt, at: now }),
             )
           } catch (e) {}
+          this.waitingSub.unsubscribe()
           this.appService.setError(
             'Esta sesión fue invalidada por otro dispositivo.',
           )
@@ -96,6 +99,7 @@ export class WaitingRoomPageComponent implements OnInit {
           this.appService.setError(
             'Esta sesión fue invalidada por otro dispositivo.',
           )
+          this.waitingSub.unsubscribe()
           this.appService.changePage('error' as any)
           return
         }

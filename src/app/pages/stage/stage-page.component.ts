@@ -51,7 +51,6 @@ export class StagePageComponent implements OnInit {
   public countdownActive = false
   public formattedTime!: string
   private queueUnsubscribe: any
-
   constructor(
     private familyService: FamilyService,
     private appService: AppService,
@@ -126,7 +125,8 @@ export class StagePageComponent implements OnInit {
         // Esta sesión fue invalidada por otro dispositivo
         this.stopCountdown()
         this.appService.setError('Sesion iniciada en otro dispositivo')
-        this.appService.changePage('waiting-room' as any)
+        if (this.queueUnsubscribe) this.queueUnsubscribe.unsubscribe()
+        this.appService.changePage('error' as any)
         return
       }
       // Si el nodo fue modificado/actualizado, recalculamos desde onStageAt/enteredAt
