@@ -8,7 +8,6 @@ import { MapComponent } from '../theater/map/map.component'
 import { preventaAvailable } from '../constants'
 import { TailwindClassDirective } from '../shared/directives/tailwind-class.directive'
 import { RouterModule } from '@angular/router'
-import { HttpClientModule } from '@angular/common/http'
 
 @Component({
   selector: 'app-admin',
@@ -19,7 +18,6 @@ import { HttpClientModule } from '@angular/common/http'
     MapComponent,
     TailwindClassDirective,
     RouterModule,
-    HttpClientModule,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',

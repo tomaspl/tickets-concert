@@ -10,7 +10,6 @@ import { ActivatedRoute } from '@angular/router'
   standalone: true,
   imports: [CommonModule],
   templateUrl: './reservation.component.html',
-  styleUrl: './reservation.component.css',
 })
 export class ReservationPageComponent implements OnInit {
   public details$!: Observable<Reservation[] | null>

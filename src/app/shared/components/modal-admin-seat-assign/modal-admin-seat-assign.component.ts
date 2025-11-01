@@ -16,7 +16,6 @@ import { ToasterService } from '../../toaster.service'
 @Component({
   selector: 'app-modal-admin-seat-assign',
   templateUrl: './modal-admin-seat-assign.component.html',
-  styleUrls: ['./modal-admin-seat-assign.component.css'],
   imports: [FormsModule, TailwindClassDirective],
   standalone: true,
 })

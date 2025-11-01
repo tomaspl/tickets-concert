@@ -3,8 +3,13 @@ import { Component } from '@angular/core'
 @Component({
   selector: 'expired-time-page',
   standalone: true,
-  imports: [],
-  templateUrl: './expired-time-page.component.html',
-  styleUrl: './expired-time-page.component.css',
+  template: `<div class="flex flex-col place-content-center">
+    <div class="max-w-lg mx-auto mt-8">
+      <h2>
+        El tiempo para hacer la reserva expiró. Aguarde unos minutos y vuelva a
+        acceder para volver a la cola virtual.
+      </h2>
+    </div>
+  </div>`,
 })
 export class ExpiredTimeComponent {}

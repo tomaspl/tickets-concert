@@ -6,8 +6,11 @@ import { SeatComponent } from '../seat/seat.component'
   selector: 'app-row',
   standalone: true,
   imports: [SeatComponent],
-  templateUrl: './row.component.html',
-  styleUrl: './row.component.css',
+  template: `<div class="grid grid-flow-col items-start justify-center">
+    @for (seat of seats; track seat) {
+      <app-seat [sectionName]="sectionName" [seat]="seat"></app-seat>
+    }
+  </div> `,
 })
 export class RowComponent {
   @Input() sectionName!: string

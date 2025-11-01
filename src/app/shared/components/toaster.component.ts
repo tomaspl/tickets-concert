@@ -24,7 +24,7 @@ export class ToasterComponent implements OnInit {
       setTimeout(() => (toaster.visible = false), 2000) // Fade out after 2 seconds
       setTimeout(() => {
         this.toasters = this.toasters.filter((t) => t !== toaster) // Remove toaster after fade out
-      }, 2500) // Extra 500ms for fade out effect
+      }, 2500)
     })
 
     this.toasterService.toastersSeats$.subscribe((message) => {
@@ -34,10 +34,6 @@ export class ToasterComponent implements OnInit {
       }
       const toaster = { message, visible: true }
       this.toastersSeats = [toaster]
-      /*setTimeout(() => (toaster.visible = false), 2000) // Fade out after 2 seconds
-      setTimeout(() => {
-        this.toasters = this.toasters.filter((t) => t !== toaster) // Remove toaster after fade out
-      }, 2500) // Extra 500ms for fade out effect*/
     })
   }
 }

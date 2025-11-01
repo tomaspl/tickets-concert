@@ -8,7 +8,9 @@ import { BoxComponent } from '../box/box.component'
   selector: 'app-boxes-column',
   standalone: true,
   imports: [BoxComponent, CommonModule],
-  templateUrl: './boxes-column.component.html',
+  template: `@for (seat of seatsRow; track seat; let i = $index) {
+    <app-box [seat]="seat" [sectionName]="sectionName"></app-box>
+  } `,
   styleUrl: './boxes-column.component.css',
 })
 export class BoxesColumnComponent {

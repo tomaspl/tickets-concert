@@ -10,12 +10,10 @@ import { Seat } from '../../../model/Seat'
 import { FormsModule } from '@angular/forms'
 import { TailwindClassDirective } from '../../directives/tailwind-class.directive'
 import { FamilyService } from '../../family.service'
-import { ToasterService } from '../../toaster.service'
 
 @Component({
   selector: 'app-modal-admin-seat-free',
   templateUrl: './modal-admin-seat-free.component.html',
-  styleUrls: ['./modal-admin-seat-free.component.css'],
   imports: [FormsModule, TailwindClassDirective],
   standalone: true,
 })

@@ -1,7 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { FamilyService } from '../../shared/family.service'
-import { Subscription, combineLatest, interval } from 'rxjs'
 import { MapComponent } from '../../theater/map/map.component'
 
 @Component({

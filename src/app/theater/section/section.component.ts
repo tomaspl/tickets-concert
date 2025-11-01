@@ -9,8 +9,16 @@ import { BoxesColumnComponent } from '../boxes-column/boxes-column.component'
   selector: 'app-section',
   standalone: true,
   imports: [BoxesColumnComponent, RowComponent, CommonModule],
-  templateUrl: './section.component.html',
-  styleUrl: './section.component.css',
+  template: `<div class="row-auto">
+    @if (sectionName.includes('Palcos')) {
+      <app-boxes-column
+        [sectionName]="sectionName"
+        [seatsRow]="seatsRow"
+      ></app-boxes-column>
+    } @else {
+      <app-row [sectionName]="sectionName" [seats]="seatsRow"></app-row>
+    }
+  </div> `,
 })
 export class SectionComponent {
   @Input() sectionName!: string

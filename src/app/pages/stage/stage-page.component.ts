@@ -59,7 +59,7 @@ export class StagePageComponent implements OnInit {
         this.familyService.seatsPerFamily - response > 0
           ? this.familyService.seatsPerFamily - response
           : (this.familyService.seatsPerFamily - response) * -1 +
-            this.familyService.seatsPerFamily\
+            this.familyService.seatsPerFamily
     })
     this.details$ = this.familyService.details$
     this.details$.subscribe((res) => {

@@ -25,7 +25,6 @@ import { AppService } from '../../shared/app.service'
     ErrorPageComponent,
   ],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.css',
 })
 export class MainPageComponent implements OnInit {
   public showStage = false
