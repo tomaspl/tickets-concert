@@ -1,12 +1,4 @@
-import {
-  AfterViewChecked,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { SectionStage } from '../../model/SectionStage'
 import { FamilyService } from '../../shared/family.service'
 import { CommonModule } from '@angular/common'
@@ -43,7 +35,6 @@ export class StagePageComponent implements OnInit {
   public availableSeats!: number
   public reservedSeats!: number
   public details$: Observable<Reservation[] | null>
-  private lastShownCount = 0
   private toasterTimeouts: any[] = []
 
   public timeRemaining!: number
@@ -68,37 +59,9 @@ export class StagePageComponent implements OnInit {
         this.familyService.seatsPerFamily - response > 0
           ? this.familyService.seatsPerFamily - response
           : (this.familyService.seatsPerFamily - response) * -1 +
-            this.familyService.seatsPerFamily
-      // se reservan 7
-      // (6 - 7) = se reservaron 2
+            this.familyService.seatsPerFamily\
     })
     this.details$ = this.familyService.details$
-    /*this.details$.subscribe((res) => {
-      if (!res) {
-        this.lastShownCount = 0
-        return
-      }
-
-      const newCount = res.length
-      if (newCount <= this.lastShownCount) {
-        return
-      }
-
-      const newItems = res.slice(this.lastShownCount)
-      let delay = 0
-      newItems.forEach((reservation) => {
-        const timeoutId = setTimeout(() => {
-          this.toasterService.showToaster(
-            `Reserva: Sección ${reservation.sectionName}, Fila ${reservation.row}, Asiento ${reservation.seat}`,
-          )
-        }, delay)
-        this.toasterTimeouts.push(timeoutId)
-        delay += 500 // 500ms entre cada notificación
-      })
-
-      this.lastShownCount = newCount
-    })*/
-
     this.details$.subscribe((res) => {
       let message = ''
       res?.forEach((reservation) => {
@@ -226,11 +189,6 @@ export class StagePageComponent implements OnInit {
     } catch (e) {}
   }
 
-  toggleDetails() {
-    if (this.reservedSeats > 0) {
-      this.showDetails = !this.showDetails
-    }
-  }
   ngOnDestroy() {
     if (this.countdownSubscription) this.countdownSubscription.unsubscribe()
     if (this.queueUnsubscribe) this.queueUnsubscribe()

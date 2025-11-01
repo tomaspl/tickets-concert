@@ -7,7 +7,7 @@ import { initializeApp } from 'firebase/app'
 const firebaseConfig = {
   apiKey: 'AIzaSyDWPJbiV3wie8AfP7pIFALuw3HcZyMFdKk',
   authDomain: 'tickets-concert.firebaseapp.com',
-  databaseURL: 'https://tickets-concert-dev.firebaseio.com/',
+  databaseURL: 'https://tickets-concert-default-rtdb.firebaseio.com/',
   projectId: 'tickets-concert',
   storageBucket: 'tickets-concert.firebasestorage.app',
   messagingSenderId: '258820628522',

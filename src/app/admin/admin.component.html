@@ -63,13 +63,6 @@
             >
               Ver log de eventos
             </button>
-
-            <!--button
-              [appTailwindClass]="'btn-small-red'"
-              (click)="uploadNewFamilies()"
-            >
-              Upload new families
-            </button-->
             <div
               class="flex items-center justify-between ring-1 ring-inset ring-gray-300 rounded-lg my-2 lg:my-4 p-2 w-full max-w-xs"
             >
@@ -108,104 +101,6 @@
           </div>
         </div>
         <router-outlet />
-        <!--@if (showMap) {
-          <div class="mx-auto max-w-6xl mt-4 pt-4">
-            <app-map />
-          </div>
-        }
-
-        @if (!showMap) {
-          <div class="grid lg:grid-cols-2 lg:gap-4">
-            <div class="flex items-center justify-start">
-              <label
-                for="price"
-                class="text-sm font-medium leading-6 text-gray-900"
-                >Filtrar por apellido:</label
-              >
-              <input
-                type="text"
-                (keyup)="keyUpHandler($event)"
-                name="price"
-                id="price"
-                class="block w-auto ml-2 rounded-md border-0 py-2 px-4 my-2 lg:my-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div class="overflow-x-auto rounded-lg shadow">
-            <table class="min-w-full table-fixed bg-white">
-              <thead>
-                <tr>
-                  <th
-                    class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Código de Familia
-                  </th>
-                  <th
-                    class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Apellido
-                  </th>
-                  <th
-                    class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Preventa
-                  </th>
-                  <th
-                    class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Acciones
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (family of orderedFamilies; track family) {
-                  <tr class="animated-div odd:bg-gray-100" #rowElement>
-                    <td
-                      class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                    >
-                      {{ family.familyCode }}
-                    </td>
-                    <td
-                      class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                    >
-                      {{ family.lastName }}
-                    </td>
-                    <td
-                      class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                    >
-                      {{ family.preventa ? 'Si' : 'No' }}
-                    </td>
-                    <td
-                      class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                    >
-                      <div class="flex flex-wrap justify-center gap-2">
-                        <p class="hidden lg:block">
-                          {{ url + family.familyId }}
-                        </p>
-                        <button
-                          (click)="copyUrl(url + family.familyId, rowElement)"
-                          [appTailwindClass]="'btn-small-red'"
-                        >
-                          Copiar link
-                        </button>
-                        <button
-                          (click)="goTo(url + 'reserva/' + family.familyId)"
-                          target="_blank"
-                          [appTailwindClass]="'btn-small-red'"
-                        >
-                          Reservas
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }-->
       </div>
     </div>
     <div

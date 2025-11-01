@@ -9,25 +9,12 @@
       <p class="bg-transparent font-bold">{{ formattedTime }}</p>
     </span>
   </div>
-  <!--div class="p-4 max-w-sm w-full mx-auto flex justify-center" [ngClass]="{'hidden':!loading}">
-  <svg [appTailwindClass]="'btn-cumbres'" viewBox="0 0 24 24">
-        </svg>
-    </div-->
   <app-map />
 
   <div>
     <div [appTailwindClass]="'footer-fixed'">
-      <span class="text-white bg-transparent">
-        <!--Asientos Disponibles: {{availableSeats}}<br>Asientos Reservados: {{reservedSeats}}-->
-      </span>
+      <span class="text-white bg-transparent"> </span>
       <div class="bg-transparent">
-        <!--button
-          (click)="toggleDetails()"
-          [ngClass]="{ disabled: reservedSeats === 0 }"
-          class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2"
-        >
-          {{ showDetails ? 'Ocultar detalles' : 'Ver detalles' }}
-        </button-->
         @if (reservedSeats === 6) {
           <button
             class="bg-gray-500 text-white font-bold py-2 px-4 rounded mr-2 cursor-not-allowed"

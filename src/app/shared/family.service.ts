@@ -2,16 +2,13 @@ import { Injectable } from '@angular/core'
 import {
   getDatabase,
   ref,
-  child,
   push,
   update,
   onValue,
-  onDisconnect,
   get,
   remove,
   query,
   orderByChild,
-  serverTimestamp,
 } from 'firebase/database'
 import app from '../../firebase'
 import { BehaviorSubject, Observable } from 'rxjs'
@@ -19,7 +16,6 @@ import { SectionStage } from '../model/SectionStage'
 import { sanitizeMap } from '../utils/map'
 import { Reservation } from '../model/Reservation'
 import { Seat } from '../model/Seat'
-import { PageType } from '../model/PageType'
 import { ActivatedRoute } from '@angular/router'
 import { ToasterService } from './toaster.service'
 import { messageTicketsPerFamily, seatsPerFamily } from '../constants'
@@ -37,7 +33,6 @@ export class FamilyService {
   private serverOffset = 0
   private localSessionId: string | null = null
   private localSessionAt: number | null = null
-  // Unsubscribe function for the current families/{familyId} listener
   private familyRefUnsubscribe: (() => void) | null = null
 
   private ticketStage: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
@@ -74,7 +69,6 @@ export class FamilyService {
   )
   public preventa$: Observable<boolean> = this.preventa.asObservable()
 
-  private firstKey!: string
   public selectedSeats = new Set()
 
   private details: BehaviorSubject<Reservation[] | null> = new BehaviorSubject<
@@ -108,10 +102,6 @@ export class FamilyService {
       .catch((err) => {
         console.error('Error escribiendo en el log:', err)
       })
-  }
-
-  logFamilyEnterToStage() {
-    this.addLogEvent(`Familia ${this.lastName} ingresa al mapa del teatro.`)
   }
 
   private isValidKey(key: string) {
@@ -740,27 +730,6 @@ export class FamilyService {
     return Promise.resolve()
   }
 
-  freeIndividualBoxByAdmin(sectionName: string, seat: Seat) {
-    const updates = {} as any
-    if (seat.familyId) {
-      const familiesRef = ref(this.rtdb, 'families/' + seat.familyId)
-      get(familiesRef)
-        .then((snapshot: any) => {
-          updates['/families/' + seat.familyId + '/availableSeats'] =
-            snapshot.val().availableSeats + 4
-          updates['/seats/' + sectionName + '/' + seat.id + '/familyCode'] =
-            null
-          updates['/seats/' + sectionName + '/' + seat.id + '/familyId'] = null
-          updates['/seats/' + sectionName + '/' + seat.id + '/lastName'] = null
-          return update(ref(this.rtdb), updates)
-        })
-        .catch((error) => {
-          return false
-        })
-    }
-    return Promise.resolve()
-  }
-
   selectSeat(seat: Seat | null, sectionName: string) {
     if (this.hasById(this.selectedSeats, seat?.id)) {
       this.removeFromSelectionDetail(sectionName, seat)
@@ -832,40 +801,12 @@ export class FamilyService {
     return false
   }
 
-  /**
-   * Agrega un evento al log en Firebase
-   * @param titulo string con el mensaje del evento
-   */
-  /*public addLogEvent(titulo: string) {
-    const logRef = ref(this.rtdb, '/log/')
-    const event = {
-      time: Date.now(),
-      titulo: titulo,
-    }
-    push(logRef, event)
-      .then(() => {})
-      .catch((err) => {
-        console.error('Error escribiendo en el log:', err)
-      })
-  }*/
-
-  /*openPreventa() {
-    const userStatusDatabaseRef = ref(this.rtdb, `/seats/`);
-
-    update(userStatusDatabaseRef, stagePreventa).then(() => {
-      console.log(
-        'Actualización en base de datos completada, configurando onDisconnect...'
-      );
-    });
-  }*/
-
   uploadAllFamilies() {
     this.http
       .get<{ lastName: string; familyCode: string }[]>('assets/output.json')
       .subscribe((dataArray) => {
         const dbRef = ref(this.rtdb, 'families')
         dataArray.forEach((item) => push(dbRef, item))
-        console.log('✅ Datos subidos desde Angular')
       })
   }
 }
