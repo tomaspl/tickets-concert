@@ -16,6 +16,9 @@ export const BTN_PRIMARY =
 export const BTN_SMALL_RED =
   'bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded my-2 lg:my-4'
 
+export const BTN_SMALL_RED_DISABLED =
+  'bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded my-2 lg:my-4 opacity-50 cursor-not-allowed'
+
 export const CARD_ALERT =
   'bg-red-100 border-l-4 border-red-500 text-red-700 p-4 my-4 flex items-center justify-center'
 

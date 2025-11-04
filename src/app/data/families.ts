@@ -4153,11 +4153,6 @@ export const familiesData: any = {
     familyCode: '8688',
     lastName: 'HERRMANN',
   },
-  '-ObSyzcPvnT8bSjsg0un': {
-    availableSeats: 6,
-    familyCode: '8688',
-    lastName: 'HERRMANN',
-  },
   '-ObSyzcPvnT8bSjsg0uo': {
     availableSeats: 6,
     familyCode: '8660',
@@ -4179,7 +4174,8 @@ export const familiesData: any = {
     lastName: 'MONSERRAT',
   },
   '-ObSyzcRReW0MCFkbr2q': {
-    availableSeats: 6,
+    availableSeats: 2,
+    preventa: true,
     familyCode: '8650',
     lastName: 'PERFARE',
   },
@@ -4204,7 +4200,8 @@ export const familiesData: any = {
     lastName: 'GONZALEZ MAYA',
   },
   '-ObSyzcU00AhRrodV7ox': {
-    availableSeats: 6,
+    availableSeats: 2,
+    preventa: true,
     familyCode: '8577',
     lastName: 'LAGOS',
   },
@@ -4214,7 +4211,8 @@ export const familiesData: any = {
     lastName: 'LO BIANCO',
   },
   '-ObSyzcV0jVF8HXfap9l': {
-    availableSeats: 6,
+    availableSeats: 2,
+    preventa: true,
     familyCode: '8692',
     lastName: 'POZO GOWLAND',
   },
@@ -4234,12 +4232,14 @@ export const familiesData: any = {
     lastName: 'ALIAGA',
   },
   '-ObSyzcWShWWfpVwTA0z': {
-    availableSeats: 6,
+    availableSeats: 2,
+    preventa: true,
     familyCode: '8592',
     lastName: 'CALVIÑO',
   },
   '-ObSyzcXJcFY17QiOX4D': {
-    availableSeats: 6,
+    availableSeats: 2,
+    preventa: true,
     familyCode: '8634',
     lastName: 'CEREIJO',
   },
@@ -4354,7 +4354,8 @@ export const familiesData: any = {
     lastName: 'RESANO SCHINONI',
   },
   '-ObSyzcfs_3rccor_E8Y': {
-    availableSeats: 6,
+    availableSeats: 2,
+    preventa: true,
     familyCode: '8624',
     lastName: 'SANCHEZ SUED',
   },
@@ -4373,11 +4374,6 @@ export const familiesData: any = {
     familyCode: '8662',
     lastName: 'WERNER BIAUS',
   },
-  '-ObSyzcgy_G7X9gc24j0': {
-    availableSeats: 6,
-    familyCode: '8668',
-    lastName: 'AGUSTONI ACETO',
-  },
   '-ObSyzcgy_G7X9gc24j1': {
     availableSeats: 6,
     familyCode: '8620',
@@ -4392,11 +4388,6 @@ export const familiesData: any = {
     availableSeats: 6,
     familyCode: '8631',
     lastName: 'BISCAISAQUE HARGUINDEGUY',
-  },
-  '-ObSyzch5kUSJPjXUJSw': {
-    availableSeats: 6,
-    familyCode: '8628',
-    lastName: 'CASTAÑO',
   },
   '-ObSyzci3zpV534uDhmc': {
     availableSeats: 6,
@@ -4413,16 +4404,6 @@ export const familiesData: any = {
     familyCode: '8653',
     lastName: 'FERNANDEZ PEZZANO',
   },
-  '-ObSyzcj2s5NlliE1IuN': {
-    availableSeats: 6,
-    familyCode: '8630',
-    lastName: 'FREIXAS',
-  },
-  '-ObSyzcj2s5NlliE1IuO': {
-    availableSeats: 6,
-    familyCode: '8480',
-    lastName: 'GALARCE',
-  },
   '-ObSyzckheDntWzTzWhp': {
     availableSeats: 6,
     familyCode: '8617',
@@ -4432,11 +4413,6 @@ export const familiesData: any = {
     availableSeats: 6,
     familyCode: '8616',
     lastName: 'GUTMAN',
-  },
-  '-ObSyzcl8n21Ibdl5AaL': {
-    availableSeats: 6,
-    familyCode: '8660',
-    lastName: 'LARRE ARBOLEDA',
   },
   '-ObSyzcorjZmMvmMlVlu': {
     availableSeats: 6,
@@ -4499,176 +4475,134 @@ export const familiesData: any = {
     lastName: 'SUNDBLAD',
   },
   '-ObSyzcsdrEOQbWB8HB4': {
-    availableSeats: 2,
+    availableSeats: 6,
     familyCode: '8677',
     lastName: 'WACHS',
   },
   '-ObSyzcsdrEOQbWB8HB5': {
-    availableSeats: 2,
+    availableSeats: 6,
     familyCode: '8689',
     lastName: 'de ZAVALIA',
   },
   '-ObSyzcsdrEOQbWB8HB6': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8576',
     lastName: 'AGUILAR',
-    preventa: true,
   },
   '-ObSyzcto1iwL9IN0U1h': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8639',
     lastName: 'ANNECCA JONAS MACKINLAY',
-    preventa: true,
   },
   '-ObSyzcto1iwL9IN0U1i': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8581',
     lastName: 'CABRERA VIERA',
-    preventa: true,
-  },
-  '-ObSyzcto1iwL9IN0U1j': {
-    availableSeats: 2,
-    familyCode: '8592',
-    lastName: 'CALVIÑO',
-    preventa: true,
-  },
-  '-ObSyzcu3V-0QLF45hUI': {
-    availableSeats: 2,
-    familyCode: '8634',
-    lastName: 'CEREIJO',
-    preventa: true,
   },
   '-ObSyzcu3V-0QLF45hUJ': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8470',
     lastName: 'CHIARADIA',
-    preventa: true,
   },
   '-ObSyzcvbgKltIf0LKQi': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8458',
     lastName: 'CILLEY RUIVAL',
-    preventa: true,
   },
   '-ObSyzcvbgKltIf0LKQj': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8602',
     lastName: 'CONTAL',
-    preventa: true,
   },
   '-ObSyzcwIC83z2LTY263': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8467',
     lastName: 'DE ALL',
-    preventa: true,
   },
   '-ObSyzcwIC83z2LTY264': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8486',
     lastName: 'DIAZ SAUBIDET',
-    preventa: true,
-  },
-  '-ObSyzcwIC83z2LTY265': {
-    availableSeats: 2,
-    familyCode: '8657',
-    lastName: 'DUBOIS SPERONI',
-    preventa: true,
   },
   '-ObSyzcxBhpu5BZt_GsV': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8559',
     lastName: 'ESPECTOR',
-    preventa: true,
   },
   '-ObSyzcxBhpu5BZt_GsW': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8606',
     lastName: 'ESTEVEZ',
-    preventa: true,
   },
   '-ObSyzcyEuH6ufxX1-Fc': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8583',
     lastName: 'GARRIDO OCHOA',
-    preventa: true,
-  },
-  '-ObSyzczk03SWdgHd0hu': {
-    availableSeats: 2,
-    familyCode: '8577',
-    lastName: 'LAGOS',
-    preventa: true,
   },
   '-ObSyzczk03SWdgHd0hv': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8596',
     lastName: 'MANEIRO',
-    preventa: true,
   },
   '-ObSyzd-qzg6hAD1mqV8': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8703',
     lastName: 'MAZZONI',
-    preventa: true,
   },
   '-ObSyzd-qzg6hAD1mqV9': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8591',
     lastName: 'MORGAN',
-    preventa: true,
   },
   '-ObSyzd-qzg6hAD1mqVA': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8601',
     lastName: 'PAPALIA',
-    preventa: true,
   },
   '-ObSyzd0H3YkARhRrzGB': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8568',
     lastName: 'PASTORI',
-    preventa: true,
-  },
-  '-ObSyzd0H3YkARhRrzGC': {
-    availableSeats: 2,
-    familyCode: '8650',
-    lastName: 'PERFARE',
-    preventa: true,
-  },
-  '-ObSyzd0H3YkARhRrzGD': {
-    availableSeats: 2,
-    familyCode: '8692',
-    lastName: 'POZO GOWLAND',
-    preventa: true,
   },
   '-ObSyzd15aTlJgZNOE0V': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8629',
     lastName: 'RIOBO ARAOZ',
-    preventa: true,
-  },
-  '-ObSyzd15aTlJgZNOE0W': {
-    availableSeats: 2,
-    familyCode: '8624',
-    lastName: 'SANCHEZ SUED',
-    preventa: true,
   },
   '-ObSyzd15aTlJgZNOE0X': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8574',
     lastName: 'SANTOS IVULIC',
-    preventa: true,
   },
   '-ObSyzd2haBgtfX3_O0n': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8598',
     lastName: 'STEFANI',
-    preventa: true,
   },
   '-ObSyzd385HPV2YIpqOu': {
     availableSeats: 2,
+    preventa: true,
     familyCode: '8512',
     lastName: 'TESTA',
-    preventa: true,
   },
   '-ObSyzd385HPV2YIpqOv': {
     availableSeats: 6,
@@ -4690,11 +4624,6 @@ export const familiesData: any = {
     familyCode: '8700',
     lastName: 'BONILLA',
   },
-  '-ObSyzd4dmPSFduG047k': {
-    availableSeats: 6,
-    familyCode: '8579',
-    lastName: 'BOUZADA MENDEZ',
-  },
   '-ObSyzd4dmPSFduG047l': {
     availableSeats: 6,
     familyCode: '8548',
@@ -4715,21 +4644,6 @@ export const familiesData: any = {
     familyCode: '8611',
     lastName: 'GAVIÑA NAON',
   },
-  '-ObSyzd5_tQ9uhMxwhDm': {
-    availableSeats: 6,
-    familyCode: '8460',
-    lastName: 'GONZALEZ MAYA',
-  },
-  '-ObSyzd5_tQ9uhMxwhDn': {
-    availableSeats: 6,
-    familyCode: '8547',
-    lastName: 'GOÑI',
-  },
-  '-ObSyzd6I6-xDwqMgwtf': {
-    availableSeats: 6,
-    familyCode: '8612',
-    lastName: 'GUEMES',
-  },
   '-ObSyzd6I6-xDwqMgwtg': {
     availableSeats: 6,
     familyCode: '8540',
@@ -4744,16 +4658,6 @@ export const familiesData: any = {
     availableSeats: 6,
     familyCode: '8481',
     lastName: 'LAURENCE',
-  },
-  '-ObSyzd7IvaL3HZSfUyW': {
-    availableSeats: 6,
-    familyCode: '8578',
-    lastName: 'LIBERATORE',
-  },
-  '-ObSyzd7IvaL3HZSfUyX': {
-    availableSeats: 6,
-    familyCode: '8582',
-    lastName: 'MAYA',
   },
   '-ObSyzd7IvaL3HZSfUyY': {
     availableSeats: 6,
@@ -4780,11 +4684,6 @@ export const familiesData: any = {
     familyCode: '8571',
     lastName: 'SABANES LAMBRE',
   },
-  '-ObSyzd9VufW258fcI3Q': {
-    availableSeats: 6,
-    familyCode: '8499',
-    lastName: 'SARRABAYROUSE',
-  },
   '-ObSyzd9VufW258fcI3R': {
     availableSeats: 6,
     familyCode: '8567',
@@ -4795,20 +4694,10 @@ export const familiesData: any = {
     familyCode: '8556',
     lastName: 'VACAREZZA CARLEVARO',
   },
-  '-ObSyzdAD9HdxI3B7P2v': {
-    availableSeats: 6,
-    familyCode: '8556',
-    lastName: 'VACAREZZA CARLEVARO',
-  },
   '-ObSyzdAD9HdxI3B7P2w': {
     availableSeats: 6,
     familyCode: '8580',
     lastName: 'VILLAMAYOR OTERO',
-  },
-  '-ObSyzdBrcXvwVZKqwaw': {
-    availableSeats: 6,
-    familyCode: '8662',
-    lastName: 'WERNER BIAUS',
   },
   '-ObSyzdBrcXvwVZKqwax': {
     availableSeats: 6,
@@ -4840,20 +4729,10 @@ export const familiesData: any = {
     familyCode: '8142',
     lastName: 'BUSTILLO',
   },
-  '-ObSyzdDihG-Laqh5cTU': {
-    availableSeats: 6,
-    familyCode: '8517',
-    lastName: 'CARRACEDO',
-  },
   '-ObSyzdEVin2MqP4lwBZ': {
     availableSeats: 6,
     familyCode: '8450',
     lastName: 'CONDOMI ALCORTA',
-  },
-  '-ObSyzdEVin2MqP4lwB_': {
-    availableSeats: 6,
-    familyCode: '8444',
-    lastName: 'DANERI',
   },
   '-ObSyzdFyW2GvoMgP6F2': {
     availableSeats: 6,
@@ -4865,35 +4744,10 @@ export const familiesData: any = {
     familyCode: '8559',
     lastName: 'ESPECTOR',
   },
-  '-ObSyzdFyW2GvoMgP6F4': {
-    availableSeats: 6,
-    familyCode: '8513',
-    lastName: 'FATTORI',
-  },
-  '-ObSyzdGVIcZvRQBBWDv': {
-    availableSeats: 6,
-    familyCode: '8623',
-    lastName: 'GARCIA BALCARCE',
-  },
   '-ObSyzdGVIcZvRQBBWDw': {
     availableSeats: 6,
     familyCode: '8122',
     lastName: 'GARINO',
-  },
-  '-ObSyzdHB1LENbDWfYnE': {
-    availableSeats: 6,
-    familyCode: '8518',
-    lastName: 'GARROCHO',
-  },
-  '-ObSyzdHB1LENbDWfYnF': {
-    availableSeats: 6,
-    familyCode: '8515',
-    lastName: 'GAYNOR ROSELL',
-  },
-  '-ObSyzdHB1LENbDWfYnG': {
-    availableSeats: 6,
-    familyCode: '8698',
-    lastName: 'GUADALUPE',
   },
   '-ObSyzdIkygRrlbOFkio': {
     availableSeats: 6,
@@ -4920,30 +4774,15 @@ export const familiesData: any = {
     familyCode: '8609',
     lastName: 'PERROTAT',
   },
-  '-ObSyzdKGJFED3feH3fW': {
-    availableSeats: 6,
-    familyCode: '8589',
-    lastName: 'PRUNEDA PERDOMO',
-  },
   '-ObSyzdKGJFED3feH3fX': {
     availableSeats: 6,
     familyCode: '8549',
     lastName: 'RESANO BOTHAMLEY',
   },
-  '-ObSyzdLRH7SYk3rZ80g': {
-    availableSeats: 6,
-    familyCode: '8629',
-    lastName: 'RIOBO ARAOZ',
-  },
   '-ObSyzdLRH7SYk3rZ80h': {
     availableSeats: 6,
     familyCode: '8242',
     lastName: 'RODRIGUEZ LARA',
-  },
-  '-ObSyzdMupJqRlOfkN34': {
-    availableSeats: 6,
-    familyCode: '8520',
-    lastName: 'ROJO VIVOT',
   },
   '-ObSyzdMupJqRlOfkN35': {
     availableSeats: 6,
@@ -5005,11 +4844,6 @@ export const familiesData: any = {
     familyCode: '8485',
     lastName: 'FIJTMAN',
   },
-  '-ObSyzdRmxXHFbrCsxiI': {
-    availableSeats: 6,
-    familyCode: '8480',
-    lastName: 'GALARCE',
-  },
   '-ObSyzdSRF2WYVqbqosL': {
     availableSeats: 6,
     familyCode: '8489',
@@ -5030,20 +4864,10 @@ export const familiesData: any = {
     familyCode: '8488',
     lastName: 'IRRERA',
   },
-  '-ObSyzdVTuyBQLg-HnW5': {
-    availableSeats: 6,
-    familyCode: '8481',
-    lastName: 'LAURENCE',
-  },
   '-ObSyzdWazriulJSoM_E': {
     availableSeats: 6,
     familyCode: '8340',
     lastName: 'LO BIANCO',
-  },
-  '-ObSyzdWazriulJSoM_F': {
-    availableSeats: 6,
-    familyCode: '8494',
-    lastName: 'LOPEZ VINCI',
   },
   '-ObSyzdXkKtGDBpFK-mS': {
     availableSeats: 6,
@@ -5070,45 +4894,15 @@ export const familiesData: any = {
     familyCode: '8558',
     lastName: 'PEREIRA',
   },
-  '-ObSyzdYW0dzzQdSUr0q': {
-    availableSeats: 6,
-    familyCode: '8605',
-    lastName: 'PICCIONI',
-  },
   '-ObSyzdZ1BeCLI5Dha3s': {
     availableSeats: 6,
     familyCode: '8051',
     lastName: 'PONCIO RUIVAL',
   },
-  '-ObSyzdZ1BeCLI5Dha3t': {
-    availableSeats: 6,
-    familyCode: '8499',
-    lastName: 'SARRABAYROUSE',
-  },
-  '-ObSyzdZ1BeCLI5Dha3u': {
-    availableSeats: 6,
-    familyCode: '8487',
-    lastName: 'SOLARI',
-  },
-  '-ObSyzd_FMIxyMrvNVZv': {
-    availableSeats: 6,
-    familyCode: '8490',
-    lastName: 'SOLER PUJOL',
-  },
   '-ObSyzd_FMIxyMrvNVZw': {
     availableSeats: 6,
     familyCode: '8493',
     lastName: 'STRASSERA',
-  },
-  '-ObSyzd_FMIxyMrvNVZx': {
-    availableSeats: 6,
-    familyCode: '8493',
-    lastName: 'STRASSERA',
-  },
-  '-ObSyzdaXXfR_ZTphY4b': {
-    availableSeats: 6,
-    familyCode: '8496',
-    lastName: 'ZICIS',
   },
   '-ObSyzdaXXfR_ZTphY4c': {
     availableSeats: 6,
@@ -5145,20 +4939,10 @@ export const familiesData: any = {
     familyCode: '8469',
     lastName: 'CASTELNUOVO CAMBIASSO',
   },
-  '-ObSyzdc-CluQIviX4wt': {
-    availableSeats: 6,
-    familyCode: '8470',
-    lastName: 'CHIARADIA',
-  },
   '-ObSyzdde3u-nbofeJG_': {
     availableSeats: 6,
     familyCode: '8458',
     lastName: 'CILLEY RUIVAL',
-  },
-  '-ObSyzdde3u-nbofeJGa': {
-    availableSeats: 6,
-    familyCode: '8467',
-    lastName: 'DE ALL',
   },
   '-ObSyzdeoqZorsyz3cvb': {
     availableSeats: 6,
@@ -5170,35 +4954,10 @@ export const familiesData: any = {
     familyCode: '8022',
     lastName: 'GARCIA LLANO',
   },
-  '-ObSyzdeoqZorsyz3cvd': {
-    availableSeats: 6,
-    familyCode: '8460',
-    lastName: 'GONZALEZ MAYA',
-  },
-  '-ObSyzdfT8K2OaG8FVcW': {
-    availableSeats: 6,
-    familyCode: '8612',
-    lastName: 'GUEMES',
-  },
-  '-ObSyzdfT8K2OaG8FVcX': {
-    availableSeats: 6,
-    familyCode: '8562',
-    lastName: 'HERZ',
-  },
   '-ObSyzdfT8K2OaG8FVcY': {
     availableSeats: 6,
     familyCode: '8457',
     lastName: 'MACHIAVELLO',
-  },
-  '-ObSyzdg8znCTwCnDrnZ': {
-    availableSeats: 6,
-    familyCode: '8461',
-    lastName: 'MAIDANA SPERANZA',
-  },
-  '-ObSyzdg8znCTwCnDrn_': {
-    availableSeats: 6,
-    familyCode: '8659',
-    lastName: 'MANZITTI',
   },
   '-ObSyzdg8znCTwCnDrna': {
     availableSeats: 6,
@@ -5215,20 +4974,10 @@ export const familiesData: any = {
     familyCode: '8338',
     lastName: 'MASSOT',
   },
-  '-ObSyzdh_WiJixFcaaDe': {
-    availableSeats: 6,
-    familyCode: '8251',
-    lastName: 'MUR',
-  },
   '-ObSyzdikRzs0va2ztST': {
     availableSeats: 6,
     familyCode: '8607',
     lastName: 'POLLEDO',
-  },
-  '-ObSyzdikRzs0va2ztSU': {
-    availableSeats: 6,
-    familyCode: '8608',
-    lastName: 'RESANO SCHINONI',
   },
   '-ObSyzdikRzs0va2ztSV': {
     availableSeats: 6,
@@ -5255,11 +5004,6 @@ export const familiesData: any = {
     familyCode: '8448',
     lastName: 'VITALITI BARE',
   },
-  '-ObSyzdkPZpnpn64Pbaw': {
-    availableSeats: 6,
-    familyCode: '8441',
-    lastName: 'ALMEIDA RISOLO',
-  },
   '-ObSyzdlRO1OX2V3wVrH': {
     availableSeats: 6,
     familyCode: '8320',
@@ -5275,40 +5019,15 @@ export const familiesData: any = {
     familyCode: '8244',
     lastName: 'BENEDIT',
   },
-  '-ObSyzdmyB-9GVOUJXCl': {
-    availableSeats: 6,
-    familyCode: '8491',
-    lastName: 'BERTELLA',
-  },
   '-ObSyzdmyB-9GVOUJXCm': {
     availableSeats: 6,
     familyCode: '8463',
     lastName: 'CALDERON SCHKAIR',
   },
-  '-ObSyzdmyB-9GVOUJXCn': {
-    availableSeats: 6,
-    familyCode: '8453',
-    lastName: 'CANESE',
-  },
   '-ObSyzdnuEJcJMnBS2fB': {
     availableSeats: 6,
     familyCode: '8136',
     lastName: 'CARVERI PASTORINO',
-  },
-  '-ObSyzdnuEJcJMnBS2fC': {
-    availableSeats: 6,
-    familyCode: '8525',
-    lastName: 'CHARRÓ',
-  },
-  '-ObSyzdoenqNi0PjXkRm': {
-    availableSeats: 6,
-    familyCode: '8450',
-    lastName: 'CONDOMI ALCORTA',
-  },
-  '-ObSyzdoenqNi0PjXkRn': {
-    availableSeats: 6,
-    familyCode: '8444',
-    lastName: 'DANERI',
   },
   '-ObSyzdoenqNi0PjXkRo': {
     availableSeats: 6,
@@ -5335,37 +5054,12 @@ export const familiesData: any = {
     familyCode: '8115',
     lastName: 'LE BOURGEOIS',
   },
-  '-ObSyzdqQfabrL6botcA': {
-    availableSeats: 6,
-    familyCode: '8340',
-    lastName: 'LO BIANCO',
-  },
   '-ObSyzdrXXM4CLP8r6qE': {
     availableSeats: 6,
     familyCode: '8674',
     lastName: 'LUCERO SCHMIDT',
   },
-  '-ObSyzdrXXM4CLP8r6qF': {
-    availableSeats: 6,
-    familyCode: '8342',
-    lastName: 'LUGONES',
-  },
-  '-ObSyzdrXXM4CLP8r6qG': {
-    availableSeats: 6,
-    familyCode: '8338',
-    lastName: 'MASSOT',
-  },
-  '-ObSyzdsOWHlwm_UxQ_J': {
-    availableSeats: 6,
-    familyCode: '8582',
-    lastName: 'MAYA',
-  },
   '-ObSyzdsOWHlwm_UxQ_K': {
-    availableSeats: 6,
-    familyCode: '8344',
-    lastName: 'OLAZABAL',
-  },
-  '-ObSyzdt2xsY1KavzRCh': {
     availableSeats: 6,
     familyCode: '8344',
     lastName: 'OLAZABAL',
@@ -5374,11 +5068,6 @@ export const familiesData: any = {
     availableSeats: 6,
     familyCode: '6094',
     lastName: 'ORTIZ PANDO',
-  },
-  '-ObSyzdt2xsY1KavzRCj': {
-    availableSeats: 6,
-    familyCode: '8242',
-    lastName: 'RODRIGUEZ LARA',
   },
   '-ObSyzdu5f7rbw9j86WH': {
     availableSeats: 6,
@@ -5390,30 +5079,10 @@ export const familiesData: any = {
     familyCode: '8640',
     lastName: 'SCHKAIR',
   },
-  '-ObSyzdvIutnMk1U_lDg': {
-    availableSeats: 6,
-    familyCode: '8448',
-    lastName: 'VITALITI BARE',
-  },
   '-ObSyzdvIutnMk1U_lDh': {
     availableSeats: 6,
     familyCode: '8315',
     lastName: 'ALVAREZ PASTORINO',
-  },
-  '-ObSyzdw_HLH8grRBgYA': {
-    availableSeats: 6,
-    familyCode: '8308',
-    lastName: 'APRAIZ',
-  },
-  '-ObSyzdw_HLH8grRBgYB': {
-    availableSeats: 6,
-    familyCode: '8160',
-    lastName: 'BASSANI LAXAGUE',
-  },
-  '-ObSyzdx3NOEwKG2Iz4i': {
-    availableSeats: 6,
-    familyCode: '8224',
-    lastName: 'BENSON',
   },
   '-ObSyzdx3NOEwKG2Iz4j': {
     availableSeats: 6,
@@ -5445,30 +5114,15 @@ export const familiesData: any = {
     familyCode: '8124',
     lastName: 'DE CICCO',
   },
-  '-ObSyze0bUQYNbUYxpji': {
-    availableSeats: 6,
-    familyCode: '8162',
-    lastName: 'ELIZALDE',
-  },
   '-ObSyze0bUQYNbUYxpjj': {
     availableSeats: 6,
     familyCode: '8446',
     lastName: 'FRAGUEIRO FRIAS',
   },
-  '-ObSyze19N0qK_5Rmwou': {
-    availableSeats: 6,
-    familyCode: '8022',
-    lastName: 'GARCIA LLANO',
-  },
   '-ObSyze19N0qK_5Rmwov': {
     availableSeats: 6,
     familyCode: '8217',
     lastName: 'LANUS',
-  },
-  '-ObSyze19N0qK_5Rmwow': {
-    availableSeats: 6,
-    familyCode: '8674',
-    lastName: 'LUCERO SCHMIDT',
   },
   '-ObSyze2Zi254zzL3_5S': {
     availableSeats: 6,
@@ -5479,11 +5133,6 @@ export const familiesData: any = {
     availableSeats: 6,
     familyCode: '8317',
     lastName: 'MARIN',
-  },
-  '-ObSyze2Zi254zzL3_5U': {
-    availableSeats: 6,
-    familyCode: '8307',
-    lastName: 'MAS FERNANDEZ NUÑEZ',
   },
   '-ObSyze3WaG_FD-kQnfS': {
     availableSeats: 6,
@@ -5530,55 +5179,10 @@ export const familiesData: any = {
     familyCode: '8471',
     lastName: 'ZORRAQUIN',
   },
-  '-ObSyze6dPnRvP3iv3C4': {
-    availableSeats: 6,
-    familyCode: '8320',
-    lastName: 'ARAOZ',
-  },
-  '-ObSyze7va4h87wvrToC': {
-    availableSeats: 6,
-    familyCode: '8314',
-    lastName: 'BALSELLS',
-  },
-  '-ObSyze7va4h87wvrToD': {
-    availableSeats: 6,
-    familyCode: '8700',
-    lastName: 'BONILLA',
-  },
   '-ObSyze7va4h87wvrToE': {
     availableSeats: 6,
     familyCode: '8193',
     lastName: 'BOTHAMLEY',
-  },
-  '-ObSyze8wNydNVw3eCln': {
-    availableSeats: 6,
-    familyCode: '8142',
-    lastName: 'BUSTILLO',
-  },
-  '-ObSyze8wNydNVw3eClo': {
-    availableSeats: 6,
-    familyCode: '8243',
-    lastName: 'CAMPLONE',
-  },
-  '-ObSyze8wNydNVw3eClp': {
-    availableSeats: 6,
-    familyCode: '8450',
-    lastName: 'CONDOMI ALCORTA',
-  },
-  '-ObSyze99R-Dfc5ulRTt': {
-    availableSeats: 6,
-    familyCode: '8122',
-    lastName: 'GARINO',
-  },
-  '-ObSyze99R-Dfc5ulRTu': {
-    availableSeats: 6,
-    familyCode: '8611',
-    lastName: 'GAVIÑA NAON',
-  },
-  '-ObSyze99R-Dfc5ulRTv': {
-    availableSeats: 6,
-    familyCode: '8245',
-    lastName: 'GONZALEZ LARSSEN',
   },
   '-ObSyzeAp3SrmPjTG8fk': {
     availableSeats: 6,
@@ -5590,40 +5194,10 @@ export const familiesData: any = {
     familyCode: '8253',
     lastName: 'LOPEZ ALFARO',
   },
-  '-ObSyzeBIm1rV10D_ikM': {
-    availableSeats: 6,
-    familyCode: '8255',
-    lastName: 'MAIZ CASAS',
-  },
-  '-ObSyzeBIm1rV10D_ikN': {
-    availableSeats: 6,
-    familyCode: '8659',
-    lastName: 'MANZITTI',
-  },
-  '-ObSyzeBIm1rV10D_ikO': {
-    availableSeats: 6,
-    familyCode: '8582',
-    lastName: 'MAYA',
-  },
   '-ObSyzeC3K9a2xHGLuLm': {
     availableSeats: 6,
     familyCode: '6074',
     lastName: 'MOYANO',
-  },
-  '-ObSyzeC3K9a2xHGLuLn': {
-    availableSeats: 6,
-    familyCode: '8251',
-    lastName: 'MUR',
-  },
-  '-ObSyzeD5ReEkxzV8nVW': {
-    availableSeats: 6,
-    familyCode: '8150',
-    lastName: 'NOVOA',
-  },
-  '-ObSyzeD5ReEkxzV8nVX': {
-    availableSeats: 6,
-    familyCode: '8344',
-    lastName: 'OLAZABAL',
   },
   '-ObSyzeD5ReEkxzV8nVY': {
     availableSeats: 6,
@@ -5640,25 +5214,10 @@ export const familiesData: any = {
     familyCode: '8643',
     lastName: 'RAGGIO',
   },
-  '-ObSyzeEeSLAU_MM0bm6': {
-    availableSeats: 6,
-    familyCode: '8565',
-    lastName: 'RODRIGUEZ BRIZUELA',
-  },
-  '-ObSyzeFESPN_vgHwqhI': {
-    availableSeats: 6,
-    familyCode: '8242',
-    lastName: 'RODRIGUEZ LARA',
-  },
   '-ObSyzeFESPN_vgHwqhJ': {
     availableSeats: 6,
     familyCode: '8208',
     lastName: 'RUIZ POSSE',
-  },
-  '-ObSyzeGJdTdSS6L4jKd': {
-    availableSeats: 6,
-    familyCode: '8502',
-    lastName: 'SARAVIA',
   },
   '-ObSyzeGJdTdSS6L4jKe': {
     availableSeats: 6,
@@ -5676,7 +5235,7 @@ export const familiesData: any = {
     lastName: 'CARRABS',
   },
   xxxxxxxxxxxxxxxxxx: {
-    availableSeats: 5000,
+    availableSeats: 4998,
     familyCode: 99999,
     lastName: 'Las Cumbres',
   },

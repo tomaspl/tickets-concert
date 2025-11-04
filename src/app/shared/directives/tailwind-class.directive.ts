@@ -19,6 +19,7 @@ import {
   FOOTER_FIXED,
   FIXED_BOTTOM_BAR,
   BTN_CUMBRES,
+  BTN_SMALL_RED_DISABLED,
 } from '../../tailwind-classes'
 
 @Directive({
@@ -57,6 +58,9 @@ export class TailwindClassDirective implements OnChanges {
         break
       case 'btn-small-red':
         classToAdd = BTN_SMALL_RED
+        break
+      case 'btn-small-red-disabled':
+        classToAdd = BTN_SMALL_RED_DISABLED
         break
       case 'card-alert':
         classToAdd = CARD_ALERT

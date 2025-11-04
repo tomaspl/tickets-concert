@@ -120,6 +120,7 @@ export class FamilyListComponent {
       .subscribe((response) => {
         const families = sanitizeFamily(response)
         this.families = families
+        console.log('families length', families.length)
         this.familiesSearch = families
       })
   }
