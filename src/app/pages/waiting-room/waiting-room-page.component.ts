@@ -136,7 +136,7 @@ export class WaitingRoomPageComponent implements OnInit {
             )
           } catch (e) {}
           this.appService.setError(
-            'La familia ya está en stage en otro dispositivo.',
+            'La familia ya está en el mapa del teatro en otro dispositivo.',
           )
           this.appService.changePage('error' as any)
           return

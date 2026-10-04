@@ -15,22 +15,13 @@
     <div [appTailwindClass]="'footer-fixed'">
       <span class="text-white bg-transparent"> </span>
       <div class="bg-transparent">
-        @if (reservedSeats === 6) {
-          <button
-            class="bg-gray-500 text-white font-bold py-2 px-4 rounded mr-2 cursor-not-allowed"
-            disabled
-          >
-            Reservar
-          </button>
-        } @else {
-          <button
-            (click)="reserveSeats()"
-            [ngClass]="{ disabled: reservedSeats === 0 }"
-            class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-          >
-            Reservar
-          </button>
-        }
+        <button
+          (click)="reserveSeats()"
+          [ngClass]="{ disabled: reservedSeats === 0 }"
+          class="bg-cumbres-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        >
+          Reservar
+        </button>
       </div>
     </div>
 

@@ -1,9 +1,26 @@
 <div class="bg-[#fafafa] min-h-screen p-8">
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-6xl mx-auto">
     <h2 class="text-2xl font-bold mb-6 text-cumbres-red">Log de eventos</h2>
     <!--button [appTailwindClass]="'btn-small-red'" (click)="resetLog()">
       Reset Log
     </button-->
+    <div class="grid lg:grid-cols-2 lg:gap-4">
+      <div class="flex items-center justify-start">
+        <label for="price" class="text-sm font-medium leading-6 text-gray-900"
+          >Filtrar por palabra clave:</label
+        >
+        <input
+          type="text"
+          (keyup)="keyUpHandler($event)"
+          name="price"
+          id="price"
+          class="block w-auto ml-2 rounded-md border-0 py-2 px-4 my-2 lg:my-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        />
+      </div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
     <div class="overflow-x-auto rounded-lg shadow">
       <table class="min-w-full bg-white">
         <thead>
@@ -16,25 +33,17 @@
             <th
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              HORA
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              HACE
+              FECHA y HORA
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let log of logList">
+          <tr *ngFor="let log of logSearch">
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
               {{ log.titulo }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
               {{ getTime(log.time) }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ getTimeAgo(log.time) }}
             </td>
           </tr>
         </tbody>

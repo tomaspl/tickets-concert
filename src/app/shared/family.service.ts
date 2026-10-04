@@ -334,10 +334,10 @@ export class FamilyService {
                 const totalAllowed = 2 * 60 * 1000 // 2 minutos permitidos
                 if (now - onStageAt < totalAllowed) {
                   this.toasterService.showToaster(
-                    'La familia ya está en stage en otro dispositivo.',
+                    'La familia ya está en el mapa del teatro en otro dispositivo.',
                   )
                   this.addLogEvent(
-                    `Familia ${this.lastName.value} cambia de dispositivo.`,
+                    `Familia ${this.lastName.value}(${this.familyCode}) cambia de dispositivo.`,
                   )
 
                   return false
@@ -347,6 +347,7 @@ export class FamilyService {
 
             // Preparar datos para actualizar la cola
             let enteredAt = Date.now()
+            console.log('snap.val()', snap.val())
             if (snap.exists()) {
               const val = snap.val()
               if (val.enteredAt) enteredAt = val.enteredAt
@@ -358,9 +359,15 @@ export class FamilyService {
               sessionAt,
             }
             // Loguear ingreso a la cola
-            this.addLogEvent(
-              `Familia ${this.lastName.value} ingresa al sistema, va a la cola de espera`,
-            )
+            if (snap.val() && snap.val().enteredAt) {
+              this.addLogEvent(
+                `Familia ${this.lastName.value}(${this.familyCode}) ingresa nuevamente al sistema, mantiene su lugar original en la cola`,
+              )
+            } else {
+              this.addLogEvent(
+                `Familia ${this.lastName.value}(${this.familyCode}) ingresa al sistema, va a la cola de espera`,
+              )
+            }
 
             // Actualizar la cola con los datos de la familia
             return update(userStatusDatabaseRef, postData).then(() => true)
@@ -411,7 +418,7 @@ export class FamilyService {
               .then(() => {
                 // Loguear ingreso al mapa del teatro
                 this.addLogEvent(
-                  `Familia ${this.lastName.value} ingresa al mapa del teatro.`,
+                  `Familia ${this.lastName.value}(${this.familyCode}) ingresa al mapa del teatro.`,
                 )
               })
               .catch((err) => {
@@ -648,7 +655,7 @@ export class FamilyService {
     })
     // Loguear adquisición de entradas
     if (seatsAdquiridos.length > 0) {
-      const titulo = `Familia ${this.lastName.value} ha adquirido ${seatsAdquiridos.join(', ')}`
+      const titulo = `Familia ${this.lastName.value} (${this.familyCode}) ha adquirido ${seatsAdquiridos.join(', ')}`
       this.addLogEvent(titulo)
     }
     this.appService.currentPage.next('thanks')

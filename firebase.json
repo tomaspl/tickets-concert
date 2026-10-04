@@ -10,7 +10,7 @@
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "no-cache"
+            "value": "no-cache, no-store, must-revalidate"
           }
         ]
       },
@@ -33,11 +33,7 @@
         ]
       }
     ],
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
@@ -49,6 +45,7 @@
     {
       "source": "functions",
       "codebase": "default",
+      "runtime": "nodejs20",
       "ignore": [
         "node_modules",
         ".git",

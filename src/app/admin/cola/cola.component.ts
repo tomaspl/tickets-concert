@@ -7,6 +7,7 @@ import { TailwindClassDirective } from '../../shared/directives/tailwind-class.d
 
 interface QueueFamily {
   familyId: string
+  familyCode: string
   lastName: string
   availableSeats: number
   enteredAt: number
@@ -61,6 +62,7 @@ export class ColaComponent implements OnInit, OnDestroy {
       if (!fam || !q) continue
       const obj: QueueFamily = {
         familyId,
+        familyCode: fam.familyCode,
         lastName: fam.lastName,
         availableSeats: fam.availableSeats,
         enteredAt: q.enteredAt,

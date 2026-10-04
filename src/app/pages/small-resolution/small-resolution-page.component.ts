@@ -21,9 +21,10 @@ import { TailwindClassDirective } from '../../shared/directives/tailwind-class.d
 
         <span class="bg-transparent mt-2">
           <span class="bg-transparent"
-            >La resolucion de la pantalla es demasiado chica para visualizar el
-            mapa del teatro.<br /><b class="bg-transparent"
-              >Le recomendamos acceder desde una computadora.</b
+            >La resolucion es demasiado chica para ver el mapa del teatro.<br /><b
+              class="bg-transparent"
+              >Le recomendamos o bien maximizar su ventana o acceder desde un
+              dispositivo de mayor resolucion</b
             ></span
           >
         </span>

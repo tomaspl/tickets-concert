@@ -21,6 +21,7 @@ interface LogEvent {
 })
 export class LogComponent implements OnInit, OnDestroy {
   logList: LogEvent[] = []
+  logSearch: LogEvent[] = []
   now: number = Date.now()
   private sub?: Subscription
 
@@ -37,6 +38,7 @@ export class LogComponent implements OnInit, OnDestroy {
       })
       // Ordenar del más reciente al más antiguo
       this.logList = arr.sort((a, b) => b.time - a.time)
+      this.logSearch = [...this.logList]
     })
     this.sub = interval(1000).subscribe(() => {
       this.now = Date.now()
@@ -56,10 +58,25 @@ export class LogComponent implements OnInit, OnDestroy {
 
   getTime(ts: number): string {
     const d = new Date(ts)
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    return d.toLocaleString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })
   }
 
   resetLog() {
     this.appService.resetLog()
+  }
+
+  keyUpHandler($event: any) {
+    const word = $event?.target.value.toUpperCase()
+    this.logSearch = this.logList.filter(
+      (log) => log.titulo.toUpperCase().indexOf(word) > -1,
+    )
   }
 }

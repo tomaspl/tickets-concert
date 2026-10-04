@@ -1,4 +1,4 @@
-export const preventaAvailable = true
+export const preventaAvailable = false
 export const seatsPerFamily = preventaAvailable ? 2 : 6
 export const messageTicketsPerFamily = !preventaAvailable
   ? 'Con esta seleccion alcanza o supera el maximo permitido de 6 ubicaciones por familia'
