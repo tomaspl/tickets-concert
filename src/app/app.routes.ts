@@ -8,11 +8,19 @@ import { ColaComponent } from './admin/cola/cola.component'
 import { MapaAdminComponent } from './admin/mapa/mapa.component'
 import { FamilyListComponent } from './admin/family-list/family-list.component'
 import { LogComponent } from './admin/log/log.component'
+import { AdminLoginComponent } from './admin/login/admin-login.component'
+import { adminAuthGuard } from './admin/admin-auth.guard'
 
 export const routes: Routes = [
   {
+    path: 'admin/login',
+    component: AdminLoginComponent,
+  },
+  {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [adminAuthGuard],
+    canActivateChild: [adminAuthGuard],
     children: [
       {
         path: 'cola',

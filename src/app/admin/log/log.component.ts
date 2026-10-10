@@ -70,6 +70,13 @@ export class LogComponent implements OnInit, OnDestroy {
   }
 
   resetLog() {
+    if (
+      !confirm(
+        '¿Seguro que querés borrar todos los logs de eventos? Esta acción no se puede deshacer.',
+      )
+    ) {
+      return
+    }
     this.appService.resetLog()
   }
 

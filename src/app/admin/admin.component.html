@@ -27,9 +27,18 @@
         <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
           Administración del Concert
         </h1>
+        @if (adminEmail) {
+          <p class="mt-2 text-sm text-gray-600">
+            Sesión:
+            <span class="font-medium text-gray-900">{{ adminEmail }}</span>
+          </p>
+        }
         <div class="grid lg:grid-cols-1 lg:gap-4 items-center">
           <div></div>
           <div class="flex flex-wrap justify-center gap-4 my-4">
+            <button [appTailwindClass]="'btn-small-red'" (click)="logout()">
+              Cerrar sesión
+            </button>
             <button [appTailwindClass]="'btn-small-red'" (click)="resetApp()">
               Reiniciar reservas
             </button>

@@ -1,48 +1,49 @@
 <div class="bg-[#fafafa] min-h-screen p-8">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-2xl font-bold mb-6 text-cumbres-red">Log de eventos</h2>
-    <!--button [appTailwindClass]="'btn-small-red'" (click)="resetLog()">
-      Reset Log
-    </button-->
-    <div class="grid lg:grid-cols-2 lg:gap-4">
-      <div class="flex items-center justify-start">
-        <label for="price" class="text-sm font-medium leading-6 text-gray-900"
-          >Filtrar por palabra clave:</label
-        >
-        <input
-          type="text"
-          (keyup)="keyUpHandler($event)"
-          name="price"
-          id="price"
-          class="block w-auto ml-2 rounded-md border-0 py-2 px-4 my-2 lg:my-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        />
-      </div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <h2 class="text-2xl font-bold text-cumbres-red">Log de eventos</h2>
+      <button [appTailwindClass]="'btn-small-red'" (click)="resetLog()">
+        Borrar todos los logs
+      </button>
+    </div>
+    <div class="mb-4 flex items-center justify-start">
+      <label for="price" class="text-sm font-medium leading-6 text-gray-900"
+        >Filtrar por palabra clave:</label
+      >
+      <input
+        type="text"
+        (keyup)="keyUpHandler($event)"
+        name="price"
+        id="price"
+        class="ml-2 my-2 block w-auto rounded-md border-0 px-4 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 lg:my-4"
+      />
     </div>
     <div class="overflow-x-auto rounded-lg shadow">
-      <table class="min-w-full bg-white">
+      <table class="min-w-full table-fixed bg-white text-left">
         <thead>
           <tr>
             <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              class="w-2/3 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
             >
-              EVENTO
+              Evento
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              class="w-1/3 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
             >
-              FECHA y HORA
+              Fecha y hora
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let log of logSearch">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+          <tr *ngFor="let log of logSearch" class="odd:bg-gray-100">
+            <td
+              class="w-2/3 break-words px-6 py-4 text-left text-sm text-gray-900"
+            >
               {{ log.titulo }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <td
+              class="w-1/3 whitespace-nowrap px-6 py-4 text-left text-sm text-gray-900"
+            >
               {{ getTime(log.time) }}
             </td>
           </tr>

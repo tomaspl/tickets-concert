@@ -34,22 +34,22 @@ import { TailwindClassDirective } from '../../shared/directives/tailwind-class.d
         <thead>
           <tr>
             <th
-              class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              class="w-1/5 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Código de Familia
             </th>
             <th
-              class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              class="w-1/5 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Apellido
             </th>
             <th
-              class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              class="w-1/5 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Preventa
             </th>
             <th
-              class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              class="w-2/5 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Acciones
             </th>
@@ -59,40 +59,40 @@ import { TailwindClassDirective } from '../../shared/directives/tailwind-class.d
           @for (family of orderedFamilies; track family) {
             <tr class="animated-div odd:bg-gray-100" #rowElement>
               <td
-                class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                class="w-1/5 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
               >
                 {{ family.familyCode }}
               </td>
               <td
-                class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                class="w-1/5 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
               >
                 {{ family.lastName }}
               </td>
               <td
-                class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                class="w-1/5 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
               >
                 {{ family.preventa ? 'Si' : 'No' }}
               </td>
-              <td
-                class="w-1/4 px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-              >
-                <div class="flex flex-wrap justify-center gap-2">
-                  <p class="hidden lg:block">
+              <td class="w-2/5 px-6 py-4 text-sm text-gray-900">
+                <div class="flex w-full flex-col gap-2">
+                  <p class="hidden w-full whitespace-nowrap lg:block">
                     {{ url + family.familyId }}
                   </p>
-                  <button
-                    (click)="copyUrl(url + family.familyId, rowElement)"
-                    [appTailwindClass]="'btn-small-red'"
-                  >
-                    Copiar link
-                  </button>
-                  <button
-                    (click)="goTo(url + 'reserva/' + family.familyId)"
-                    target="_blank"
-                    [appTailwindClass]="'btn-small-red'"
-                  >
-                    Reservas
-                  </button>
+                  <div class="flex w-full flex-wrap justify-center gap-2">
+                    <button
+                      (click)="copyUrl(url + family.familyId, rowElement)"
+                      [appTailwindClass]="'btn-small-red'"
+                    >
+                      Copiar link
+                    </button>
+                    <button
+                      (click)="goTo(url + 'reserva/' + family.familyId)"
+                      target="_blank"
+                      [appTailwindClass]="'btn-small-red'"
+                    >
+                      Reservas
+                    </button>
+                  </div>
                 </div>
               </td>
             </tr>

@@ -212,12 +212,12 @@ const stageAllAvailable = {
     },
     {
       row: 1,
-      seat: 20,
+      seat: 0,
       enabled: true,
     },
     {
       row: 1,
-      seat: 22,
+      seat: 0,
       enabled: true,
     },
     {
@@ -7721,12 +7721,12 @@ const stagePreventa = {
     },
     {
       row: 1,
-      seat: 20,
+      seat: 0,
       enabled: true,
     },
     {
       row: 1,
-      seat: 22,
+      seat: 0,
       enabled: true,
     },
     {
